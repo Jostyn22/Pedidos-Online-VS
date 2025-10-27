@@ -1,0 +1,268 @@
+/* 🌿 Fondo general */
+.admin-hero {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #d9f99d, #bbf7d0);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    color: #1e293b;
+    font-family: "Poppins", sans-serif;
+    overflow: hidden;
+    /* 🔹 evita scrolls innecesarios */
+}
+
+/* 🔵 Navbar */
+.admin-navbar {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    display: flex;
+    justify-content: flex-start;
+    gap: 40px;
+    align-items: center;
+    padding: 12px 50px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    /* 🔹 navbar fija arriba */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* 🔰 Logo */
+.admin-logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #14532d;
+    margin-left: -40px;
+}
+
+.admin-logo span {
+    color: #15803d;
+}
+
+/* 🔹 Menú de navegación */
+.admin-menu {
+    list-style: none;
+    display: flex;
+    gap: 22px;
+    margin: 0;
+    margin-left: 200px;
+    padding: 0;
+}
+
+.admin-menu li {
+    cursor: pointer;
+    font-weight: 500;
+    color: #1e3a8a;
+    transition: 0.3s;
+}
+
+.admin-menu li:hover {
+    color: #166534;
+    text-decoration: underline;
+}
+
+/* 🔴 Botón Cerrar sesión */
+.logout-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.2s;
+    margin-left: auto;
+    margin-right: 60px;
+}
+
+.logout-btn:hover {
+    background: #b91c1c;
+    transform: scale(1.05);
+}
+
+/* 🧠 Contenido central */
+.admin-content {
+    text-align: center;
+    margin-top: 140px;
+    /* 🔹 ajustado por navbar fija */
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+.admin-content h1 {
+    font-size: 2.3rem;
+    color: #14532d;
+    margin-bottom: 10px;
+}
+
+.admin-content p {
+    font-size: 1.1rem;
+    color: #334155;
+    margin-bottom: 25px;
+}
+
+/* 🟢 Botón principal */
+.btn-dashboard {
+    background-color: #14532d;
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(22, 101, 52, 0.2);
+}
+
+.btn-dashboard:hover {
+    background-color: #166534;
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(22, 101, 52, 0.3);
+}
+
+/* ⚙️ Footer */
+.admin-footer {
+    background: rgba(255, 255, 255, 0.75);
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    color: #14532d;
+    font-size: 0.9rem;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* ✨ Animación */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+    .admin-navbar {
+        flex-direction: column;
+        padding: 15px;
+        gap: 8px;
+    }
+
+    .admin-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .admin-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .btn-dashboard {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+
+    /* 🧾 Tabla de usuarios */
+    .admin-usuarios-container {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 35px 40px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        width: 75%;
+        margin: 40px auto;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .admin-usuarios-container h2 {
+        text-align: center;
+        color: #14532d;
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+
+    /* ✨ Tabla */
+    .tabla-usuarios {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        text-align: left;
+        font-family: "Poppins", sans-serif;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .tabla-usuarios thead {
+        background: linear-gradient(to right, #a7f3d0, #d9f99d);
+        /* 💚 Verde pastel con amarillo suave */
+    }
+
+    .tabla-usuarios th {
+        padding: 12px 14px;
+        color: #14532d;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        border-bottom: 2px solid #d1fae5;
+    }
+
+    .tabla-usuarios td {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 10px 14px;
+        color: #334155;
+        font-size: 0.93rem;
+    }
+
+    /* 🟩 Alternar color de filas */
+    .tabla-usuarios tbody tr:nth-child(even) {
+        background-color: #f9fafb;
+    }
+
+    .tabla-usuarios tbody tr:hover {
+        background-color: #ecfdf5;
+        transition: background-color 0.3s ease;
+    }
+
+    /* 🎨 Select para cambiar rol */
+    .tabla-usuarios select {
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid #94a3b8;
+        font-size: 0.9rem;
+        background-color: #ffffff;
+        color: #14532d;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .tabla-usuarios select:disabled {
+        background-color: #e5e7eb;
+        color: #64748b;
+        cursor: not-allowed;
+    }
+
+    .tabla-usuarios select:hover:not(:disabled) {
+        border-color: #16a34a;
+        box-shadow: 0 0 6px rgba(22, 163, 74, 0.3);
+    }
+
+    /* 🟢 Mensaje */
+    .mensaje {
+        margin-bottom: 15px;
+        font-weight: 500;
+        text-align: center;
+        font-size: 0.95rem;
+        color: #166534;
+    }
+
+}

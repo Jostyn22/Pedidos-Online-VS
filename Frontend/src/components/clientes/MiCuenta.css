@@ -1,0 +1,353 @@
+/* 🔹 Barra superior igual que ClienteInicio */
+.navbar-cliente {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(204, 255, 204, 0.9);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 60px;
+    max-width: 100%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    box-sizing: border-box;
+}
+
+/* Empuja el contenido hacia abajo para que no quede oculto */
+.cuenta-container {
+    padding-top: 80px;
+}
+
+/* Estilos del logo */
+.navbar-logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #1e8a3e;
+}
+
+.navbar-logo span {
+    color: #6bc702;
+}
+
+/* Estilos de los links */
+.navbar-links {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-links li a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.navbar-links li a:hover {
+    color: #0284c7;
+}
+
+/* Buscador y carrito */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-search {
+    position: relative;
+}
+
+.navbar-search input {
+    padding: 6px 32px 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 0.9rem;
+    color: #333;
+    background-color: white;
+}
+
+.icon-search {
+    position: absolute;
+    right: 10px;
+    top: 4px;
+    color: #0284c7;
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.icon-cart {
+    font-size: 1.2rem;
+    color: #1e3a8a;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.icon-cart:hover {
+    transform: scale(1.1);
+}
+
+/* 🔷 Contenedor principal */
+.cuenta-container {
+    font-family: "Poppins", sans-serif;
+    min-height: 100vh;
+    width: 100vw;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* 🔹 Encabezado */
+.cuenta-header {
+    background-color: #a7f3d0;
+    text-align: center;
+    padding: 40px 20px;
+    margin-top: 90px;
+}
+
+.cuenta-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #065f46;
+    letter-spacing: 2px;
+}
+
+.cuenta-header span {
+    color: #0ea5e9;
+}
+
+/* 🔹 Estructura principal */
+.cuenta-contenido {
+    display: flex;
+    justify-content: space-between;
+    /* ✅ distribuye ambos lados */
+    align-items: stretch;
+    margin: 0;
+    padding: 30px 40px;
+    /* 🔧 menos margen lateral */
+    gap: 40px;
+    width: 100%;
+    min-height: calc(100vh - 200px);
+    box-sizing: border-box;
+}
+
+/* 🔸 Sidebar */
+.cuenta-sidebar {
+    width: 280px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.cuenta-usuario .avatar {
+    width: 70px;
+    height: 70px;
+    background: #10b981;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cuenta-usuario h3 {
+    color: #065f46;
+    margin-bottom: 5px;
+}
+
+.btn-salir {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+
+.btn-salir:hover {
+    background: #dc2626;
+}
+
+/* 🔹 Menú lateral */
+.menu-cuenta {
+    list-style: none;
+    padding: 0;
+    margin-top: 30px;
+    text-align: left;
+}
+
+.menu-cuenta li {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    color: #065f46;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.menu-cuenta li:hover {
+    background: #e0f2f1;
+    color: #047857;
+}
+
+.menu-cuenta .activo {
+    background: #d1fae5;
+    font-weight: 600;
+}
+
+/* 🔸 Área principal */
+.cuenta-main {
+    flex-grow: 1;
+    /* ✅ ocupa todo el espacio restante */
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+/* 🟢 Texto general */
+.cuenta-main h2,
+.cuenta-main h3 {
+    color: #065f46;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.cuenta-main span {
+    color: #0ea5e9;
+}
+
+.cuenta-main p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* 🧾 Sección de Pedidos */
+.pedidos-section h3 {
+    color: #065f46;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Tabla de pedidos */
+.tabla-pedidos {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.tabla-pedidos th,
+.tabla-pedidos td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+.tabla-pedidos th {
+    background: #d1fae5;
+    color: #065f46;
+    font-weight: 600;
+}
+
+.tabla-pedidos tr:hover {
+    background: #f0fdfa;
+}
+
+/* 📦 Sección de Direcciones */
+.pedidos-section,
+.direcciones-section,
+.detalles-section {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+.direccion-box {
+    width: 100%;
+    background: #f8f8f8;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.direccion-box p {
+    color: #333;
+    margin: 8px 0;
+}
+
+/* Botón editar */
+.btn-editar {
+    background: #00a67e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.btn-editar:hover {
+    background: #008f6a;
+}
+
+.detalles-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.detalles-grid p {
+    margin: 0;
+    color: #333;
+}
+
+.detalles-grid strong {
+    color: #047857;
+}
+
+/* 📱 Responsive */
+@media (max-width: 992px) {
+    .cuenta-contenido {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .cuenta-sidebar {
+        width: 100%;
+    }
+
+    .cuenta-main {
+        width: 100%;
+    }
+
+
+}

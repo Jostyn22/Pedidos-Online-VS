@@ -1,0 +1,48 @@
+.admin-usuarios-container {
+    background: linear-gradient(135deg, #d9f99d, #bbf7d0);
+    border: 2px solid #000;
+    width: 85%;
+    margin: -50px auto;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: "Poppins", sans-serif;
+    text-align: center;
+}
+
+.admin-usuarios-container h2 {
+    color: #14532d;
+    margin-bottom: 25px;
+}
+
+.tabla-usuarios {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.tabla-usuarios th,
+.tabla-usuarios td {
+    padding: 10px;
+    border: 1px solid #d1d5db;
+}
+
+.tabla-usuarios th {
+    background: #dcfce7;
+    color: #166534;
+}
+
+select {
+    padding: 5px 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+    cursor: pointer;
+}
+
+.mensaje {
+    color: #166534;
+    font-weight: 500;
+    margin-bottom: 20px;
+}

@@ -1,0 +1,79 @@
+.navbar-cliente {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #bbf7d0;
+    padding: 12px 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-family: "Poppins", sans-serif;
+
+    /* ✅ añade esto */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 5;
+}
+
+/* Logo */
+.navbar-logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #065f46;
+}
+
+.navbar-logo span {
+    color: #22c55e;
+}
+
+/* Links */
+.navbar-links {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-links a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.navbar-links a:hover {
+    color: #0ea5e9;
+}
+
+/* Search + icons */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-search {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.navbar-search input {
+    padding: 8px 30px 8px 12px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.icon-search {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}
+
+.icon-cart {
+    font-size: 1.3rem;
+    cursor: pointer;
+}
