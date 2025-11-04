@@ -30,7 +30,7 @@ const RegistroUsuario = () => {
 
         if (formData.password !== formData.password2) {
             setExito(false);
-            setMensaje("⚠️ Las contraseñas no coinciden");
+            setMensaje("Las contraseñas no coinciden");
             return;
         }
 
@@ -45,15 +45,15 @@ const RegistroUsuario = () => {
 
             if (response.ok) {
                 setExito(true);
-                setMensaje("✅ Usuario registrado exitosamente");
+                setMensaje("Usuario registrado exitosamente");
                 setTimeout(() => navigate("/"), 2000);
             } else {
                 setExito(false);
-                setMensaje("❌ Error: " + (data.password || data.detail || "Verifica los datos"));
+                setMensaje("Error: " + (data.password || data.detail || "Verifica los datos"));
             }
         } catch (error) {
             setExito(false);
-            setMensaje("⚠️ Error de conexión con el servidor");
+            setMensaje("Error de conexión con el servidor");
         }
     };
 

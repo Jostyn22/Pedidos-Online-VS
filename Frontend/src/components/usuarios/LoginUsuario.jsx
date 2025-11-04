@@ -13,8 +13,6 @@ const LoginUsuario = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // 🧹 Limpia tokens viejos
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
         setMensaje("");
@@ -22,26 +20,23 @@ const LoginUsuario = () => {
         setLoading(true);
 
         try {
-            console.log("🟢 Enviando a backend:", { username, password });
+            console.log("Enviando a backend:", { username, password });
 
-            const response = await api.post("/api/usuarios/login/", {
+            const response = await api.post("usuarios/login/", {
                 username,
                 password,
             });
 
-            console.log("🔹 Respuesta del servidor:", response.data);
+            console.log(" Respuesta del servidor:", response.data);
 
-            // ✅ Guardar tokens y datos del usuario
+            // Guardar tokens y datos del usuario
             localStorage.setItem("access", response.data.access);
             localStorage.setItem("refresh", response.data.refresh);
             localStorage.setItem("username", response.data.username);
             localStorage.setItem("rol", response.data.rol);
-
-            // 🟩 Mensaje verde de éxito
             setMensaje(`Bienvenid@, ${response.data.username}`);
             setColorMensaje("#16a34a");
-
-            // 🔁 Redirigir según el rol
+            //Redirigir según el rol
             setTimeout(() => {
                 setLoading(false);
                 if (response.data.rol === "CLIENTE") {
@@ -55,7 +50,7 @@ const LoginUsuario = () => {
                 }
             }, 1500);
         } catch (error) {
-            console.error("❌ Error en login:", error);
+            console.error("Error en login:", error);
             setMensaje("El usuario o la contraseña está incorrecto.");
             setColorMensaje("#dc2626");
             setLoading(false);
@@ -84,6 +79,11 @@ const LoginUsuario = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
+
+                        {/* Enlace ¿Olvidaste tu contraseña?*/}
+                        <p className="olvidaste" onClick={() => navigate("/recuperar")}>
+                            ¿Olvidaste tu contraseña?
+                        </p>
 
                         <button type="submit" disabled={loading}>
                             {loading ? <span className="spinner"></span> : "Ingresar"}

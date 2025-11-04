@@ -7,12 +7,9 @@ SECRET_KEY = "django-insecure-%nep6$^21^)tex(k_cc(n%@4whz-h4-!c_7x03sv*pa%aj1n(l
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]  # 👈 Permitir desde cualquier host (útil para desarrollo)
+ALLOWED_HOSTS = ["*"]
 
-
-# -------------------------------
 # APPS INSTALADAS
-# -------------------------------
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -21,15 +18,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "rest_framework_simplejwt",   # 👈 Te faltaba esta app
+    "rest_framework_simplejwt",   
     "corsheaders",
     "Usuarios",
+    "Productos",
 ]
 
-
-# -------------------------------
 # MIDDLEWARE
-# -------------------------------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -42,9 +37,7 @@ MIDDLEWARE = [
 ]
 
 
-# -------------------------------
 # CONFIGURACIÓN DE URLs Y TEMPLATES
-# -------------------------------
 ROOT_URLCONF = "pedidos_backend.urls"
 
 TEMPLATES = [
@@ -64,10 +57,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "pedidos_backend.wsgi.application"
 
-
-# -------------------------------
 # BASE DE DATOS
-# -------------------------------
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -75,10 +65,7 @@ DATABASES = {
     }
 }
 
-
-# -------------------------------
 # VALIDACIÓN DE CONTRASEÑAS
-# -------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -86,32 +73,20 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-
-# -------------------------------
 # CONFIGURACIÓN REGIONAL
-# -------------------------------
 LANGUAGE_CODE = "es-ec"
 TIME_ZONE = "America/Guayaquil"
 USE_I18N = True
 USE_TZ = True
 
-
-# -------------------------------
 # ARCHIVOS ESTÁTICOS
-# -------------------------------
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
-# -------------------------------
 # CONFIGURACIÓN DEL USUARIO
-# -------------------------------
 AUTH_USER_MODEL = "Usuarios.Usuario"
 
-
-# -------------------------------
 # CONFIGURACIÓN DE REST FRAMEWORK
-# -------------------------------
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -119,15 +94,13 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.AllowAny",
     ),
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    ),
 }
-
-
-
-
-
-# -------------------------------
 # CONFIGURACIÓN DEL TOKEN JWT
-# -------------------------------
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
@@ -137,9 +110,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# -------------------------------
 # CONFIGURACIÓN DE CORS
-# -------------------------------
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",

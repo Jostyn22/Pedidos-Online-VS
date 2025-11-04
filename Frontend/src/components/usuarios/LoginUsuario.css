@@ -1,4 +1,4 @@
-/* 🔹 Elimina márgenes globales */
+/* Elimina márgenes globales */
 html,
 body {
     margin: 0;
@@ -7,7 +7,7 @@ body {
     width: 100%;
 }
 
-/* 🌈 Fondo verde amarillento */
+/* Fondo verde amarillento */
 .login-container {
     display: flex;
     justify-content: center;
@@ -21,7 +21,7 @@ body {
     overflow: hidden;
 }
 
-/* 🧩 Caja del formulario */
+/*Caja del formulario */
 .login-box {
     background: #ffffff;
     border-radius: 16px;
@@ -32,7 +32,7 @@ body {
     animation: fadeIn 0.6s ease-in-out;
 }
 
-/* 🏷️ Título */
+/* Título */
 .titulo {
     font-size: 1.6rem;
     font-weight: 700;
@@ -84,7 +84,7 @@ body {
     transform: scale(1.02);
 }
 
-/* 🔄 Spinner de carga dentro del botón */
+/*Spinner de carga dentro del botón */
 .spinner {
     width: 20px;
     height: 20px;
@@ -102,7 +102,6 @@ body {
     }
 }
 
-/* 💡 Botón deshabilitado */
 button[disabled] {
     opacity: 0.8;
     cursor: not-allowed;
@@ -159,10 +158,25 @@ button[disabled] {
     }
 }
 
-/* 📱 Responsive */
+/*Responsive */
 @media (max-width: 768px) {
     .login-box {
         width: 90%;
         padding: 35px 25px;
     }
+}
+
+.olvidaste {
+    text-align: right;
+    margin-top: 4px;
+    margin-bottom: 10px;
+    color: #1a4ca0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.olvidaste:hover {
+    text-decoration: underline;
+    color: #0d47a1;
 }

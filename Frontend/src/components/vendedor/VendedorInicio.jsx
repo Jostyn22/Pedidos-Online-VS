@@ -9,7 +9,7 @@ const VendedorInicio = () => {
     const [pedidos, setPedidos] = useState([]);
     const [productos, setProductos] = useState([]);
     const [usuario, setUsuario] = useState({});
-    const [mensajeExito, setMensajeExito] = useState(""); // ✅ mensaje visual
+    const [mensajeExito, setMensajeExito] = useState("");
 
     useEffect(() => {
         if (vista === "pedidos") obtenerPedidos();
@@ -19,7 +19,7 @@ const VendedorInicio = () => {
 
     const obtenerPedidos = async () => {
         try {
-            const response = await api.get("/api/pedidos/vendedor/");
+            const response = await api.get("pedidos/vendedor/");
             setPedidos(response.data);
         } catch (error) {
             console.error("Error al cargar pedidos:", error);
@@ -28,7 +28,7 @@ const VendedorInicio = () => {
 
     const obtenerProductos = async () => {
         try {
-            const response = await api.get("/api/productos/vendedor/");
+            const response = await api.get("productos/vendedor/");
             setProductos(response.data);
         } catch (error) {
             console.error("Error al cargar productos:", error);
@@ -37,7 +37,7 @@ const VendedorInicio = () => {
 
     const obtenerPerfil = async () => {
         try {
-            const response = await api.get("/api/usuarios/actual/");
+            const response = await api.get("usuarios/actual/");
             setUsuario(response.data);
         } catch (error) {
             console.error("Error al cargar perfil:", error);
@@ -51,7 +51,7 @@ const VendedorInicio = () => {
 
     return (
         <div className="vendedor-hero">
-            {/* 🔸 Navbar */}
+            {/*Navbar */}
             <nav className="vendedor-navbar">
                 <div className="vendedor-logo">
                     PedidosOnlineVS<span>Vendedores</span>
@@ -67,7 +67,7 @@ const VendedorInicio = () => {
                 </button>
             </nav>
 
-            {/* 🔹 Contenido dinámico */}
+            {/*Contenido dinámico */}
             <section className="vendedor-content">
                 {/* Vista inicio */}
                 {vista === "inicio" && (
@@ -206,20 +206,20 @@ const VendedorInicio = () => {
                                         className="btn-guardar"
                                         onClick={async () => {
                                             try {
-                                                await api.patch("/api/usuarios/actual/", {
+                                                await api.patch("usuarios/actual/", {
                                                     username: usuario.username,
                                                     email: usuario.email,
                                                     telefono: usuario.telefono,
                                                     direccion: usuario.direccion,
                                                 });
 
-                                                setMensajeExito("✅ Datos actualizados correctamente");
+                                                setMensajeExito("Datos actualizados correctamente");
                                                 setUsuario({ ...usuario, editando: false });
 
                                                 setTimeout(() => setMensajeExito(""), 4000);
                                             } catch (error) {
                                                 console.error("Error al actualizar perfil:", error);
-                                                setMensajeExito("❌ No se pudo actualizar el perfil");
+                                                setMensajeExito("No se pudo actualizar el perfil");
                                                 setTimeout(() => setMensajeExito(""), 4000);
                                             }
                                         }}

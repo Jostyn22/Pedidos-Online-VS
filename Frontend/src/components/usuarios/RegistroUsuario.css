@@ -1,20 +1,16 @@
-/* 🔹 Fondo con centrado y margen de seguridad */
+/* Fondo con centrado y margen de seguridad */
 .registro-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* 👈 centrado vertical perfecto */
     height: 100vh;
     width: 100vw;
     background: linear-gradient(to right, #d8f3dc, #fefae0);
     font-family: "Poppins", sans-serif;
     overflow: hidden;
-    /* 🚫 evita las barras */
 }
 
-
-/* 🧩 Caja del formulario */
-/* 🧩 Caja blanca principal del formulario */
+/* Caja del formulario */
 .registro-box {
     background: #ffffff;
     border-radius: 14px;
@@ -27,7 +23,7 @@
 }
 
 
-/* 🏷️ Títulos */
+/* Títulos */
 .titulo {
     color: #14532d;
     font-size: 1.6rem;
@@ -65,7 +61,7 @@
 .btn-registrar {
     width: 100%;
     padding: 12px;
-    background-color: #166534;
+    background-color: #1e3a8a;
     color: white;
     font-weight: 600;
     border: none;
@@ -76,7 +72,7 @@
 }
 
 .btn-registrar:hover {
-    background-color: #14532d;
+    background-color: #1e3a8a;
     transform: scale(1.02);
 }
 
@@ -132,7 +128,7 @@
     }
 }
 
-/* 📱 Responsive */
+/* Responsive */
 @media (max-width: 768px) {
     .registro-box {
         width: 90%;

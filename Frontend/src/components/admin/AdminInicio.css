@@ -1,4 +1,4 @@
-/* 🌿 Fondo general */
+/*Fondo general */
 .admin-hero {
     position: relative;
     width: 100vw;
@@ -11,10 +11,9 @@
     color: #1e293b;
     font-family: "Poppins", sans-serif;
     overflow: hidden;
-    /* 🔹 evita scrolls innecesarios */
 }
 
-/* 🔵 Navbar */
+/*Navbar */
 .admin-navbar {
     width: 100%;
     background: rgba(255, 255, 255, 0.85);
@@ -26,13 +25,12 @@
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     position: fixed;
-    /* 🔹 navbar fija arriba */
     top: 0;
     left: 0;
     z-index: 1000;
 }
 
-/* 🔰 Logo */
+/*Logo */
 .admin-logo {
     font-size: 1.4rem;
     font-weight: 700;
@@ -44,7 +42,7 @@
     color: #15803d;
 }
 
-/* 🔹 Menú de navegación */
+/*Menú de navegación */
 .admin-menu {
     list-style: none;
     display: flex;
@@ -66,7 +64,7 @@
     text-decoration: underline;
 }
 
-/* 🔴 Botón Cerrar sesión */
+/*Botón Cerrar sesión */
 .logout-btn {
     background: #dc2626;
     color: white;
@@ -85,7 +83,7 @@
     transform: scale(1.05);
 }
 
-/* 🧠 Contenido central */
+/*Contenido central */
 .admin-content {
     text-align: center;
     margin-top: 140px;
@@ -105,7 +103,7 @@
     margin-bottom: 25px;
 }
 
-/* 🟢 Botón principal */
+/*Botón principal */
 .btn-dashboard {
     background-color: #14532d;
     color: white;
@@ -125,7 +123,7 @@
     box-shadow: 0 6px 15px rgba(22, 101, 52, 0.3);
 }
 
-/* ⚙️ Footer */
+/*Footer */
 .admin-footer {
     background: rgba(255, 255, 255, 0.75);
     width: 100%;
@@ -137,7 +135,7 @@
     box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* ✨ Animación */
+/*Animación */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -150,7 +148,7 @@
     }
 }
 
-/* 📱 Responsive */
+/*Responsive */
 @media (max-width: 768px) {
     .admin-navbar {
         flex-direction: column;
@@ -173,7 +171,7 @@
         font-size: 0.95rem;
     }
 
-    /* 🧾 Tabla de usuarios */
+    /*Tabla de usuarios */
     .admin-usuarios-container {
         background: #ffffff;
         border-radius: 16px;
@@ -191,7 +189,7 @@
         margin-bottom: 20px;
     }
 
-    /* ✨ Tabla */
+    /*Tabla */
     .tabla-usuarios {
         width: 100%;
         border-collapse: collapse;
@@ -204,7 +202,6 @@
 
     .tabla-usuarios thead {
         background: linear-gradient(to right, #a7f3d0, #d9f99d);
-        /* 💚 Verde pastel con amarillo suave */
     }
 
     .tabla-usuarios th {
@@ -223,7 +220,7 @@
         font-size: 0.93rem;
     }
 
-    /* 🟩 Alternar color de filas */
+    /*Alternar color de filas */
     .tabla-usuarios tbody tr:nth-child(even) {
         background-color: #f9fafb;
     }
@@ -233,7 +230,7 @@
         transition: background-color 0.3s ease;
     }
 
-    /* 🎨 Select para cambiar rol */
+    /*Select para cambiar rol */
     .tabla-usuarios select {
         padding: 6px 10px;
         border-radius: 8px;
@@ -256,7 +253,7 @@
         box-shadow: 0 0 6px rgba(22, 163, 74, 0.3);
     }
 
-    /* 🟢 Mensaje */
+    /*Mensaje */
     .mensaje {
         margin-bottom: 15px;
         font-weight: 500;

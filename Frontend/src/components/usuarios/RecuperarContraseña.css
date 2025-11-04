@@ -1,0 +1,147 @@
+.recuperar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to right, #d8f3dc, #fefae0);
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+}
+
+/* Caja principal */
+.recuperar-box {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 420px;
+    text-align: center;
+}
+
+/* Título principal */
+.titulo {
+    color: #14532d;
+    /* Verde oscuro igual al login */
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+/* Subtítulo */
+.subtitulo {
+    color: #1e3a8a;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Campo de correo*/
+.correo-verificar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.correo-verificar input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.btn-verificar {
+    background-color: #1e3a8a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-verificar:hover {
+    background-color: #172554;
+}
+
+/* Campos de contraseña */
+.recuperar-box input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+/* Botón principal */
+.recuperar-box button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #1e3a8a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.recuperar-box button[type="submit"]:hover {
+    background-color: #172554;
+}
+
+/* Mensaje de validación */
+.mensaje {
+    margin-top: 15px;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Enlace para volver */
+.volver {
+    margin-top: 20px;
+    color: #1b5e20;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.volver:hover {
+    text-decoration: underline;
+}
+
+/* Pie de página */
+.footer-text {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: #444;
+}
+
+/* Animación de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*Aplicar la animación al cuadro principal */
+.recuperar-box {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 420px;
+    text-align: center;
+
+    /* 💫 Animación */
+    animation: fadeInUp 0.8s ease-out;
+}

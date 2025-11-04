@@ -2,12 +2,13 @@
     background: linear-gradient(135deg, #d9f99d, #bbf7d0);
     border: 2px solid #000;
     width: 85%;
-    margin: -50px auto;
+    margin: -74px auto;
     padding: 25px;
     border-radius: 14px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     font-family: "Poppins", sans-serif;
     text-align: center;
+    animation: fadeIn 0.6s ease-in-out;
 }
 
 .admin-usuarios-container h2 {
@@ -20,6 +21,7 @@
     border-collapse: collapse;
     table-layout: fixed;
     word-wrap: break-word;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 .tabla-usuarios th,
@@ -45,4 +47,146 @@ select {
     color: #166534;
     font-weight: 500;
     margin-bottom: 20px;
+}
+
+/* Controles superiores (buscador + filtro) */
+.controles-superiores {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 10px 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    width: fit-content;
+    margin-left: auto;
+    animation: fadeInUp 0.6s ease;
+}
+
+/*Campo de búsqueda */
+.input-busqueda {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 2px solid #15803d;
+    background-color: #ecfdf5;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    color: #064e3b;
+    width: 220px;
+    transition: all 0.3s ease;
+}
+
+.input-busqueda::placeholder {
+    color: #166534;
+    opacity: 0.7;
+}
+
+.input-busqueda:focus {
+    outline: none;
+    border-color: #065f46;
+    box-shadow: 0 0 6px rgba(5, 150, 105, 0.4);
+    background-color: #f0fdf4;
+}
+
+/*Filtro de rol */
+.filtro-rol {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #14532d;
+    font-weight: 600;
+}
+
+.filtro-rol label {
+    font-size: 15px;
+    color: #064e3b;
+}
+
+.filtro-rol select {
+    background-color: #ecfdf5;
+    border: 2px solid #16a34a;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    color: #064e3b;
+    transition: all 0.3s ease;
+}
+
+.filtro-rol select:hover {
+    background-color: #d1fae5;
+    border-color: #047857;
+    transform: scale(1.03);
+}
+
+.filtro-rol select:focus {
+    outline: none;
+    border-color: #065f46;
+    box-shadow: 0 0 4px rgba(22, 163, 74, 0.5);
+}
+
+/*Paginación */
+.paginacion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 25px;
+    font-family: "Poppins", sans-serif;
+    animation: fadeInUp 0.8s ease;
+}
+
+.paginacion button {
+    background-color: #166534;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.paginacion button:hover {
+    background-color: #14532d;
+    transform: scale(1.05);
+}
+
+.paginacion button:disabled {
+    background-color: #a7f3d0;
+    color: #064e3b;
+    cursor: not-allowed;
+}
+
+.paginacion span {
+    color: #064e3b;
+    font-weight: 600;
+}
+
+/*Animaciones suaves */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

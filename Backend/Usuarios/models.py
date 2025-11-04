@@ -6,7 +6,6 @@ class Usuario(AbstractUser):
         ('ADMIN', 'Administrador'),
         ('CLIENTE', 'Cliente'),
         ('VENDEDOR', 'Vendedor'),
-        ('REPARTIDOR', 'Repartidor'),
     ]
     rol = models.CharField("Rol", max_length=15, choices=ROLES, default='CLIENTE')
     telefono = models.CharField("Teléfono", max_length=15, blank=True, null=True)

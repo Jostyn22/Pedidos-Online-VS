@@ -8,12 +8,8 @@ const MiCuenta = () => {
     const [seccion, setSeccion] = useState("escritorio");
     const [mensaje, setMensaje] = useState("");
     const navigate = useNavigate();
-
-    // Estados de edición
     const [editandoDireccion, setEditandoDireccion] = useState(false);
     const [editandoDatos, setEditandoDatos] = useState(false);
-
-    // Campos editables
     const [nuevaDireccion, setNuevaDireccion] = useState("");
     const [nuevoTelefono, setNuevoTelefono] = useState("");
     const [nuevoUsername, setNuevoUsername] = useState("");
@@ -22,14 +18,14 @@ const MiCuenta = () => {
     useEffect(() => {
         const obtenerUsuario = async () => {
             try {
-                const response = await api.get("/api/usuarios/actual/");
+                const response = await api.get("usuarios/actual/");
                 setUsuario(response.data);
                 setNuevaDireccion(response.data.direccion || "");
                 setNuevoTelefono(response.data.telefono || "");
                 setNuevoUsername(response.data.username || "");
                 setNuevoEmail(response.data.email || "");
             } catch (error) {
-                console.error("❌ Error al obtener usuario:", error);
+                console.error("Error al obtener usuario:", error);
                 setMensaje("No se pudo cargar la información de la cuenta.");
             }
         };
@@ -38,14 +34,14 @@ const MiCuenta = () => {
 
     const handleLogout = () => {
         localStorage.clear();
-        localStorage.setItem("logoutMessage", "✅ Sesión cerrada correctamente.");
+        localStorage.setItem("logoutMessage", "Sesión cerrada correctamente.");
         navigate("/");
     };
 
-    // 🔹 Guardar dirección
+    //Guardar dirección
     const handleGuardarDireccion = async () => {
         try {
-            await api.patch("/api/usuarios/actual/", {
+            await api.patch("usuarios/actual/", {
                 direccion: nuevaDireccion,
                 telefono: nuevoTelefono,
             });
@@ -56,10 +52,10 @@ const MiCuenta = () => {
         }
     };
 
-    // 🔹 Guardar datos personales
+    //Guardar datos personales
     const handleGuardarDatos = async () => {
         try {
-            await api.patch("/api/usuarios/actual/", {
+            await api.patch("usuarios/actual/", {
                 username: nuevoUsername,
                 email: nuevoEmail,
             });
@@ -98,16 +94,16 @@ const MiCuenta = () => {
                 </div>
             </nav>
 
-            {/* 🔹 Encabezado */}
+            {/*Encabezado */}
             <header className="cuenta-header">
                 <h1>
                     DATOS <span>PERSONALES</span>
                 </h1>
             </header>
 
-            {/* 🔹 Contenido principal */}
+            {/*Contenido principal */}
             <div className="cuenta-contenido">
-                {/* 🧩 Sidebar */}
+                {/* Sidebar */}
                 <aside className="cuenta-sidebar">
                     <div className="cuenta-usuario">
                         <div className="avatar">
@@ -127,7 +123,7 @@ const MiCuenta = () => {
                     </ul>
                 </aside>
 
-                {/* 🧩 Área principal */}
+                {/*Área principal */}
                 <main className="cuenta-main">
                     {/* Escritorio */}
                     {seccion === "escritorio" && (

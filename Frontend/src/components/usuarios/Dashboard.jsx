@@ -1,4 +1,3 @@
-// src/components/usuarios/Dashboard.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
@@ -18,7 +17,7 @@ const Dashboard = () => {
 
         const fetchUsuario = async () => {
             try {
-                const response = await api.get("/api/usuarios/actual/");
+                const response = await api.get("usuarios/actual/");
                 setUsuario(response.data);
             } catch (error) {
                 console.error("Error al cargar usuario:", error);
@@ -41,7 +40,7 @@ const Dashboard = () => {
     if (!usuario)
         return (
             <p className="dashboard-error">
-                ❌ No se encontró la información del usuario.
+                No se encontró la información del usuario.
             </p>
         );
 
@@ -67,7 +66,7 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard-container">
-            {/* 🔵 Navbar superior */}
+            {/* Navbar superior */}
             <nav className="navbar fixed-navbar">
                 <div className="navbar-left">
                     <h2 className="navbar-logo">Pedidos Online</h2>

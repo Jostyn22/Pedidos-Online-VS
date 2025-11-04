@@ -93,7 +93,7 @@
     transform: scale(1.1);
 }
 
-/* 🔷 Contenedor principal */
+/*Contenedor principal */
 .cuenta-container {
     font-family: "Poppins", sans-serif;
     min-height: 100vh;
@@ -105,7 +105,7 @@
     overflow-x: hidden;
 }
 
-/* 🔹 Encabezado */
+/*Encabezado */
 .cuenta-header {
     background-color: #a7f3d0;
     text-align: center;
@@ -124,22 +124,20 @@
     color: #0ea5e9;
 }
 
-/* 🔹 Estructura principal */
+/*Estructura principal */
 .cuenta-contenido {
     display: flex;
     justify-content: space-between;
-    /* ✅ distribuye ambos lados */
     align-items: stretch;
     margin: 0;
     padding: 30px 40px;
-    /* 🔧 menos margen lateral */
     gap: 40px;
     width: 100%;
     min-height: calc(100vh - 200px);
     box-sizing: border-box;
 }
 
-/* 🔸 Sidebar */
+/*Sidebar */
 .cuenta-sidebar {
     width: 280px;
     background: #ffffff;
@@ -184,7 +182,7 @@
     background: #dc2626;
 }
 
-/* 🔹 Menú lateral */
+/*Menú lateral */
 .menu-cuenta {
     list-style: none;
     padding: 0;
@@ -210,10 +208,9 @@
     font-weight: 600;
 }
 
-/* 🔸 Área principal */
+/*Área principal */
 .cuenta-main {
     flex-grow: 1;
-    /* ✅ ocupa todo el espacio restante */
     background: white;
     padding: 40px;
     border-radius: 12px;
@@ -222,7 +219,7 @@
     box-sizing: border-box;
 }
 
-/* 🟢 Texto general */
+/*Texto general */
 .cuenta-main h2,
 .cuenta-main h3 {
     color: #065f46;
@@ -240,14 +237,14 @@
     margin-bottom: 20px;
 }
 
-/* 🧾 Sección de Pedidos */
+/*Sección de Pedidos */
 .pedidos-section h3 {
     color: #065f46;
     margin-bottom: 20px;
     font-weight: 600;
 }
 
-/* Tabla de pedidos */
+/*Tabla de pedidos */
 .tabla-pedidos {
     width: 100%;
     border-collapse: collapse;
@@ -271,7 +268,7 @@
     background: #f0fdfa;
 }
 
-/* 📦 Sección de Direcciones */
+/*Sección de Direcciones */
 .pedidos-section,
 .direcciones-section,
 .detalles-section {
@@ -334,7 +331,7 @@
     color: #047857;
 }
 
-/* 📱 Responsive */
+/*Responsive */
 @media (max-width: 992px) {
     .cuenta-contenido {
         flex-direction: column;

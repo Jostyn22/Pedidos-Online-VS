@@ -1,4 +1,4 @@
-/* 🌿 Fondo general */
+/*Fondo general */
 .vendedor-hero {
     position: relative;
     width: 100vw;
@@ -13,7 +13,7 @@
     overflow-y: auto;
 }
 
-/* 💚 Navbar con verde claro */
+/*Navbar con verde claro */
 .vendedor-navbar {
     width: 100%;
     background: rgba(167, 243, 208, 0.95);
@@ -31,7 +31,7 @@
     transition: background 0.4s ease;
 }
 
-/* 🪴 Logo */
+/*Logo */
 .vendedor-logo {
     font-size: 1.4rem;
     font-weight: 700;
@@ -42,7 +42,7 @@
     color: #16a34a;
 }
 
-/* 🧭 Menú */
+/*Menú */
 .vendedor-menu {
     list-style: none;
     display: flex;
@@ -64,7 +64,7 @@
     text-decoration: underline;
 }
 
-/* 🔴 Botón cerrar sesión */
+/*Botón cerrar sesión */
 .logout-btn {
     background: #dc2626;
     color: white;
@@ -83,7 +83,7 @@
     transform: scale(1.05);
 }
 
-/* 🌱 Contenido principal */
+/*Contenido principal */
 .vendedor-content {
     text-align: center;
     margin-top: 130px;
@@ -103,7 +103,7 @@
     margin-bottom: 25px;
 }
 
-/* 🟩 Botón principal */
+/*|Botón principal */
 .btn-vendedor {
     background-color: #14532d;
     color: white;
@@ -123,7 +123,7 @@
     box-shadow: 0 6px 15px rgba(22, 101, 52, 0.3);
 }
 
-/* 🧾 Contenedor de tablas */
+/*Contenedor de tablas */
 .tabla-container {
     background: #ffffff;
     border-radius: 16px;
@@ -134,7 +134,7 @@
     animation: fadeIn 0.4s ease-in-out;
 }
 
-/* 📊 Tablas */
+/* Tablas */
 .tabla-vendedor {
     width: 100%;
     border-collapse: collapse;
@@ -162,7 +162,7 @@
     color: #334155;
 }
 
-/* 🌼 Alternar color de filas */
+/*Alternar color de filas */
 .tabla-vendedor tbody tr:nth-child(even) {
     background-color: #f9fafb;
 }
@@ -172,7 +172,7 @@
     transition: background-color 0.3s ease;
 }
 
-/* 👤 Perfil */
+/*Perfil */
 .perfil-container {
     background: #ffffff;
     border-radius: 16px;
@@ -190,7 +190,7 @@
     margin-bottom: 20px;
 }
 
-/* ✏️ Campos editables */
+/*Campos editables */
 .campo-editable {
     margin: 12px 0;
     display: flex;
@@ -219,7 +219,7 @@
     outline: none;
 }
 
-/* 📦 Contenedor de botones del perfil */
+/*Contenedor de botones del perfil */
 .perfil-botones {
     display: flex;
     justify-content: center;
@@ -227,7 +227,7 @@
     margin-top: 25px;
 }
 
-/* 💾 Botón Guardar */
+/*Botón Guardar */
 .btn-guardar {
     background-color: #14532d;
     color: #ffffff;
@@ -246,7 +246,7 @@
     transform: scale(1.05);
 }
 
-/* ❌ Botón Cancelar */
+/* Botón Cancelar */
 .btn-cancelar {
     background-color: #dc2626;
     color: white;
@@ -265,7 +265,7 @@
     transform: scale(1.05);
 }
 
-/* ⚙️ Footer */
+/*Footer */
 .vendedor-footer {
     background: rgba(255, 255, 255, 0.75);
     width: 100%;
@@ -277,7 +277,7 @@
     box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* ✨ Animación */
+/*Animación */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -290,7 +290,7 @@
     }
 }
 
-/* 📱 Responsive */
+/* Responsive */
 @media (max-width: 768px) {
     .vendedor-navbar {
         flex-direction: column;
@@ -325,7 +325,7 @@
         min-width: unset;
     }
 
-    /* ✅ Mensaje de éxito / error debajo de los botones */
+    /* Mensaje de éxito*/
     .mensaje-exito {
         margin-top: 20px;
         text-align: center;
