@@ -36,7 +36,6 @@ const AdminUsuarios = () => {
             setNextUrl(data.next);
             setPrevUrl(data.previous);
 
-            //Detectar número de página
             if (data.count) {
                 const paginas = Math.ceil(data.count / 3);
                 setTotalPaginas(paginas);
@@ -70,7 +69,7 @@ const AdminUsuarios = () => {
             obtenerUsuarios("/api/usuarios/listar/?page=1");
         } catch (error) {
             console.error("Error al eliminar usuario:", error);
-            setMensaje("❌ No se pudo eliminar el usuario.");
+            setMensaje("No se pudo eliminar el usuario.");
         }
     };
 

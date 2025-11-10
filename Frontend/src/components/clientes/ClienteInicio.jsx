@@ -3,12 +3,17 @@ import { Link } from "react-router-dom";
 import "./ClienteInicio.css";
 import fondoVivirSano from "../../assets/vivir_sano.jpg";
 import CatalogoProductos from "../productos/CatalogoProductos";
+import ClienteCarrito from "./ClienteCarrito";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const ClienteInicio = () => {
     const [mostrarCatalogo, setMostrarCatalogo] = useState(false);
+    const [mostrarCarrito, setMostrarCarrito] = useState(false);
 
     const manejarClickProductos = () => {
         setMostrarCatalogo(true);
+        setMostrarCarrito(false);
         setTimeout(() => {
             const seccion = document.getElementById("productos");
             if (seccion) {
@@ -19,12 +24,35 @@ const ClienteInicio = () => {
 
     const manejarClickInicio = () => {
         setMostrarCatalogo(false);
+        setMostrarCarrito(false); // ocultar carrito
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
+    const manejarClickCarrito = () => {
+        setMostrarCatalogo(false);
+        setMostrarCarrito(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    const location = useLocation();
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const seccion = params.get("seccion");
+
+        if (seccion === "productos") {
+            setMostrarCatalogo(true);
+            setMostrarCarrito(false);
+        }
+
+        if (seccion === "carrito") {
+            setMostrarCarrito(true);
+            setMostrarCatalogo(false);
+        }
+    }, [location]);
+
     return (
         <div>
-            {/*Navbar siempre visible */}
+            {/* 🔹 Navbar */}
             <nav className="navbar-cliente">
                 <div className="navbar-logo">
                     PedidosOnline<span>VS</span>
@@ -34,11 +62,12 @@ const ClienteInicio = () => {
                     <li>
                         <button
                             onClick={manejarClickInicio}
-                            className={`link-btn ${!mostrarCatalogo ? "activo" : ""}`}
+                            className={`link-btn ${!mostrarCatalogo && !mostrarCarrito ? "activo" : ""}`}
                         >
                             Inicio
                         </button>
                     </li>
+
                     <li>
                         <button
                             onClick={manejarClickProductos}
@@ -47,7 +76,7 @@ const ClienteInicio = () => {
                             Productos
                         </button>
                     </li>
-                    <li><Link to="#pedidos">Pedidos</Link></li>
+
                     <li><Link to="/cliente/mi-cuenta">Cuenta</Link></li>
                 </ul>
 
@@ -56,17 +85,23 @@ const ClienteInicio = () => {
                         <input type="text" placeholder="Buscar..." />
                         <span className="icon-search">🔍</span>
                     </div>
-                    <span className="icon-cart">🛒</span>
+
+                    {/*CARRITO*/}
+                    <span
+                        className="icon-cart"
+                        onClick={manejarClickCarrito}
+                        style={{ cursor: "pointer" }}
+                    >
+                        🛒
+                    </span>
                 </div>
             </nav>
 
-            {/* 🔹 Mostrar hero solo si NO está el catálogo activo */}
-            {!mostrarCatalogo && (
+            {/* Sección HERO */}
+            {!mostrarCatalogo && !mostrarCarrito && (
                 <div
                     className="cliente-hero"
-                    style={{
-                        backgroundImage: `url(${fondoVivirSano})`,
-                    }}
+                    style={{ backgroundImage: `url(${fondoVivirSano})` }}
                 >
                     <div className="cliente-overlay"></div>
                     <div className="cliente-content">
@@ -84,26 +119,26 @@ const ClienteInicio = () => {
                 </div>
             )}
 
-            {/* 🔹 Mostrar catálogo solo cuando se da clic en "Productos" */}
-            {mostrarCatalogo && (
+            {/*Catálogo de productos */}
+            {mostrarCatalogo && !mostrarCarrito && (
                 <section id="productos" style={{ background: "#f8f9fa", padding: "40px 0" }}>
-                    <h2
-                        style={{
-                            textAlign: "center",
-                            marginBottom: "30px",
-                            fontFamily: "Poppins",
-                        }}
-                    >
-                        Nuestros Productos
-                    </h2>
+
                     <CatalogoProductos />
                 </section>
             )}
 
-            {/* 🔹 Pie de página */}
+            {/*CARRITO*/}
+            {mostrarCarrito && (
+                <section style={{ background: "#f8f9fa", padding: "40px 0" }}>
+                    <ClienteCarrito />
+                </section>
+            )}
+
+            {/* Footer */}
             <footer className="cliente-footer">©Pedidos Online VS</footer>
         </div>
     );
 };
 
 export default ClienteInicio;
+

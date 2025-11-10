@@ -30,7 +30,6 @@
     z-index: 1000;
 }
 
-/*Logo */
 .admin-logo {
     font-size: 1.4rem;
     font-weight: 700;
@@ -64,7 +63,6 @@
     text-decoration: underline;
 }
 
-/*Botón Cerrar sesión */
 .logout-btn {
     background: #dc2626;
     color: white;
@@ -87,7 +85,6 @@
 .admin-content {
     text-align: center;
     margin-top: 140px;
-    /* 🔹 ajustado por navbar fija */
     animation: fadeIn 0.8s ease-in-out;
 }
 
@@ -123,7 +120,6 @@
     box-shadow: 0 6px 15px rgba(22, 101, 52, 0.3);
 }
 
-/*Footer */
 .admin-footer {
     background: rgba(255, 255, 255, 0.75);
     width: 100%;
@@ -135,7 +131,6 @@
     box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
 }
 
-/*Animación */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -220,7 +215,6 @@
         font-size: 0.93rem;
     }
 
-    /*Alternar color de filas */
     .tabla-usuarios tbody tr:nth-child(even) {
         background-color: #f9fafb;
     }
@@ -230,7 +224,6 @@
         transition: background-color 0.3s ease;
     }
 
-    /*Select para cambiar rol */
     .tabla-usuarios select {
         padding: 6px 10px;
         border-radius: 8px;
@@ -253,7 +246,6 @@
         box-shadow: 0 0 6px rgba(22, 163, 74, 0.3);
     }
 
-    /*Mensaje */
     .mensaje {
         margin-bottom: 15px;
         font-weight: 500;
@@ -262,4 +254,166 @@
         color: #166534;
     }
 
+}
+
+.btn-agregar {
+    background: #16a34a;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.btn-agregar:hover {
+    background: #15803d;
+}
+
+.btn-editar {
+    background: #0ea5e9;
+    color: #fff;
+    padding: 3px 5px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    margin-right: 6px;
+}
+
+.btn-editar:hover {
+    background: #0284c7;
+}
+
+.btn-eliminar {
+    background: #dc2626;
+    color: #fff;
+    padding: 0px 2px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-eliminar:hover {
+    background: #b91c1c;
+}
+
+.btn-ver {
+    padding: 4px 10px !important;
+    font-size: 0.75rem !important;
+    border-radius: 6px !important;
+    background: #ffffff;
+    border: 1.5px solid #0a7b8b;
+    color: #0a7b8b;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-ver:hover {
+    background: #0a7b8b;
+    color: white;
+    transform: scale(1.05);
+}
+
+.tabla-usuarios td {
+    vertical-align: middle !important;
+}
+
+.td-acciones {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.tabla-usuarios td:nth-child(6) {
+    text-align: center;
+    vertical-align: middle !important;
+}
+
+/* Contenedor de botones de acciones */
+.td-acciones {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+/* Botón de icono - base */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* Ver */
+.btn-icon.view {
+    background: #ffffff;
+    border: 1.5px solid #0ea5e9;
+    color: #0ea5e9;
+}
+
+.btn-icon.view:hover {
+    background: #0ea5e9;
+    color: white;
+}
+
+/* Editar */
+.btn-icon.edit {
+    background: #0ea5e9;
+    color: #fff;
+}
+
+.btn-icon.edit:hover {
+    background: #0284c7;
+}
+
+/* Eliminar */
+.btn-icon.delete {
+    background: #dc2626;
+    color: #fff;
+}
+
+.btn-icon.delete:hover {
+    background: #b91c1c;
+}
+
+body,
+html {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.estado-btn {
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.estado-btn.activo {
+    background: #d1fae5;
+    color: #047857;
+}
+
+.estado-btn.activo:hover {
+    background: #a7f3d0;
+}
+
+.estado-btn.inactivo {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.estado-btn.inactivo:hover {
+    background: #fecaca;
 }

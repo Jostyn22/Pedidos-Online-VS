@@ -10,6 +10,11 @@ import VendedorInicio from "./components/vendedor/VendedorInicio";
 import RutaProtegida from "./components/RutaProtegida";
 import CatalogoProductos from "./components/productos/CatalogoProductos";
 import RecuperarContraseña from "./components/usuarios/RecuperarContraseña";
+import ClienteCarrito from "./components/clientes/ClienteCarrito";
+import AgregarProducto from "./components/vendedor/AgregarProducto";
+import AdminProductos from "./components/admin/AdminProductos";
+import AdminEditarProducto from "./components/admin/AdminEditarProducto";
+import AdminAgregarProducto from "./components/admin/AdminAgregarProducto";
 
 function App() {
   return (
@@ -31,7 +36,6 @@ function App() {
             </RutaProtegida>
           }
         />
-
         {/* Cliente: Inicio */}
         <Route
           path="/cliente/inicio"
@@ -41,7 +45,6 @@ function App() {
             </RutaProtegida>
           }
         />
-
         {/* Cliente: Mi Cuenta */}
         <Route
           path="/cliente/mi-cuenta"
@@ -71,7 +74,29 @@ function App() {
             </RutaProtegida>
           }
         />
-
+        <Route
+          path="/admin/productos"
+          element={
+            <RutaProtegida rolPermitido="ADMIN">
+              <AdminProductos />
+            </RutaProtegida>
+          }
+        />
+        <Route path="/admin/productos/editar/:id"
+          element={
+            <RutaProtegida rolPermitido="ADMIN">
+              <AdminEditarProducto />
+            </RutaProtegida>
+          }
+        />
+        <Route
+          path="/admin/productos/agregar"
+          element={
+            <RutaProtegida rolPermitido="ADMIN">
+              <AdminAgregarProducto />
+            </RutaProtegida>
+          }
+        />
         {/* Vendedor: Panel principal */}
         <Route
           path="/vendedor/inicio"
@@ -81,9 +106,27 @@ function App() {
             </RutaProtegida>
           }
         />
+        {/* Vendedor: Agregar Producto */}
+        <Route
+          path="/vendedor/productos/agregar"
+          element={
+            <RutaProtegida rolPermitido="VENDEDOR">
+              <AgregarProducto />
+            </RutaProtegida>
+          }
+        />
+        {/* Catálogo de productos */}
+        <Route path="/catalogo" element={<CatalogoProductos />} /> {/**/}
+        {/*  Carrito */}
+        <Route
+          path="/cliente/carrito"
+          element={
+            <RutaProtegida rolPermitido="CLIENTE">
+              <ClienteCarrito />
+            </RutaProtegida>
+          }
+        />
 
-        {/* 🔹 Catálogo de productos (nuevo) */}
-        <Route path="/catalogo" element={<CatalogoProductos />} /> {/* ✅ */}
       </Routes>
     </Router>
   );

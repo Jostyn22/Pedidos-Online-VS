@@ -1,0 +1,70 @@
+.agregar-contenedor {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    margin-top: -100px;
+}
+
+.form-producto {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-producto input,
+.form-producto textarea,
+.form-producto select {
+    padding: 10px;
+    border: 1px solid #cfe8cf;
+    border-radius: 6px;
+    outline: none;
+    font-size: 15px;
+    width: 100%;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.fila {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-guardar {
+    background: #1f8b4c;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-guardar:hover {
+    background: #16743d;
+}
+
+.mensaje {
+    padding: 8px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.mensaje:contains("✅") {
+    background: #d3f8d8;
+    color: #1d6b2e;
+}
+
+.mensaje:contains("❌") {
+    background: #ffd4d4;
+    color: #9b1c1c;
+}

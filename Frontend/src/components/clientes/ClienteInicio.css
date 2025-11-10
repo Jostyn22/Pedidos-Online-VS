@@ -103,7 +103,6 @@
     transform: scale(1.1);
 }
 
-/* Capa azul con desenfoque */
 .cliente-overlay {
     position: absolute;
     inset: 0;

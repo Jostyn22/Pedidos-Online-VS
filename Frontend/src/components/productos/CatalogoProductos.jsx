@@ -11,6 +11,28 @@ const CatalogoProductos = () => {
     const [marca, setMarca] = useState("");
     const [orden, setOrden] = useState("");
     const [mensaje, setMensaje] = useState("");
+
+    const agregarAlCarrito = (prod) => {
+        let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+        const existente = carrito.find(item => item.producto_id === prod.id);
+
+        if (existente) {
+            existente.cantidad += 1;
+        } else {
+            carrito.push({
+                producto_id: prod.id,
+                nombre: prod.nombre,
+                imagen: prod.imagen,
+                precio: parseFloat(prod.precio),
+                cantidad: 1
+            });
+        }
+
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+
+    };
+
     //Obtener productos
     const obtenerProductos = async () => {
         try {
@@ -54,7 +76,6 @@ const CatalogoProductos = () => {
         }
     };
 
-    //Efecto al cargar
     useEffect(() => {
         obtenerCategorias();
         obtenerMarcas();
@@ -136,8 +157,12 @@ const CatalogoProductos = () => {
 
                                 <p className="precio">${prod.precio}</p>
                                 <p className="incluye-iva">Incluye IVA</p>
-
-                                <button className="btn-carrito">Añadir al carrito</button>
+                                <button
+                                    className="btn-carrito"
+                                    onClick={() => agregarAlCarrito(prod)}
+                                >
+                                    Añadir al carrito
+                                </button>
                             </div>
                         ))
                     ) : (
