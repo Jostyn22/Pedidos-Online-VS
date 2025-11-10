@@ -22,6 +22,10 @@ INSTALLED_APPS = [
     "corsheaders",
     "Usuarios",
     "Productos",
+    "Compras",
+    "Pedidos",
+    "Pagos",
+    "Envios",
 ]
 
 # MIDDLEWARE
@@ -81,6 +85,8 @@ USE_TZ = True
 
 # ARCHIVOS ESTÁTICOS
 STATIC_URL = "static/"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CONFIGURACIÓN DEL USUARIO

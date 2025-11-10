@@ -160,7 +160,6 @@ class ListarUsuariosView(generics.ListAPIView):
 class CambiarRolUsuarioView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def patch(self, request, pk):
-        # Validacion para que solo los administradores pueden modificar roles
         if request.user.rol != "ADMIN":
             return Response(
                 {"detail": "No tienes permiso para modificar roles."},
