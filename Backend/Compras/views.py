@@ -5,7 +5,6 @@ from .models import Compra, CompraDetalle
 from Productos.models import Producto
 from .serializers import CompraSerializer
 
-
 class ConfirmarCompraView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 

@@ -4,6 +4,8 @@ import api from "../../services/api";
 
 const AdminProductos = () => {
     const [productos, setProductos] = useState([]);
+    const [mensaje, setMensaje] = useState("");
+    const [colorMensaje, setColorMensaje] = useState("");
     const navigate = useNavigate();
 
     const obtenerProductos = async () => {
@@ -12,16 +14,9 @@ const AdminProductos = () => {
             setProductos(response.data);
         } catch (error) {
             console.error("Error al obtener productos:", error);
-        }
-    };
-
-    const eliminarProducto = async (id) => {
-        if (!window.confirm("¿Seguro que deseas eliminar este producto?")) return;
-        try {
-            await api.delete(`productos/${id}/`);
-            obtenerProductos();
-        } catch (error) {
-            console.error("Error al eliminar producto:", error);
+            setMensaje("Error al cargar productos.");
+            setColorMensaje("#dc2626");
+            setTimeout(() => setMensaje(""), 4000);
         }
     };
 
@@ -29,10 +24,34 @@ const AdminProductos = () => {
         obtenerProductos();
     }, []);
 
+    const eliminarProducto = async (id) => {
+        if (!window.confirm("¿Seguro que deseas eliminar este producto?")) return;
+
+        try {
+            await api.delete(`productos/${id}/`);
+            setMensaje("Producto eliminado correctamente.");
+            setColorMensaje("#16a34a");
+            obtenerProductos();
+            setTimeout(() => setMensaje(""), 3000);
+        } catch (error) {
+            console.error("Error al eliminar producto:", error);
+
+            let msg = "No se pudo eliminar el producto.";
+            if (error.response?.data?.detail) {
+                msg = error.response.data.detail;
+            }
+
+            setMensaje(msg);
+            setColorMensaje("#dc2626");
+            setTimeout(() => setMensaje(""), 4000);
+        }
+    };
+
     return (
         <div style={{ padding: "30px", minHeight: "100vh" }}>
             <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Gestión de Productos</h2>
 
+            {/* Botón agregar */}
             <div style={{ textAlign: "center", marginBottom: "15px" }}>
                 <button
                     onClick={() => navigate("/admin/productos/agregar")}
@@ -44,13 +63,14 @@ const AdminProductos = () => {
                         borderRadius: "6px",
                         cursor: "pointer",
                         fontWeight: "bold",
-                        fontSize: "16px"
+                        fontSize: "16px",
                     }}
                 >
                     Agregar Producto
                 </button>
             </div>
 
+            {/* Tabla de productos */}
             <div
                 style={{
                     maxHeight: "75vh",
@@ -73,6 +93,14 @@ const AdminProductos = () => {
                     </thead>
 
                     <tbody>
+                        {mensaje && (
+                            <tr>
+                                <td colSpan="7" style={{ backgroundColor: colorMensaje, color: "white", textAlign: "center", fontWeight: "bold", padding: "10px" }}>
+                                    {mensaje}
+                                </td>
+                            </tr>
+                        )}
+
                         {productos.map((prod) => (
                             <tr key={prod.id} style={{ height: "52px", textAlign: "center" }}>
                                 <td>{prod.id}</td>
@@ -80,7 +108,6 @@ const AdminProductos = () => {
                                 <td>{prod.marca?.nombre || "Sin marca"}</td>
                                 <td>{prod.categoria?.nombre || "Sin categoría"}</td>
                                 <td>${Number(prod.precio).toFixed(2)}</td>
-
                                 <td>
                                     {prod.imagen ? (
                                         <button
@@ -92,14 +119,13 @@ const AdminProductos = () => {
                                                 padding: "5px 8px",
                                                 borderRadius: "6px",
                                                 cursor: "pointer",
-                                                fontSize: "0.85rem"
+                                                fontSize: "0.85rem",
                                             }}
                                         >
                                             👁 Ver
                                         </button>
                                     ) : "—"}
                                 </td>
-
                                 <td>
                                     <button
                                         onClick={() => navigate(`/admin/productos/editar/${prod.id}`)}
@@ -111,7 +137,7 @@ const AdminProductos = () => {
                                             borderRadius: "6px",
                                             cursor: "pointer",
                                             marginRight: "6px",
-                                            fontSize: "0.85rem"
+                                            fontSize: "0.85rem",
                                         }}
                                     >
                                         ✏️ Editar
@@ -126,7 +152,7 @@ const AdminProductos = () => {
                                             padding: "5px 8px",
                                             borderRadius: "6px",
                                             cursor: "pointer",
-                                            fontSize: "0.85rem"
+                                            fontSize: "0.85rem",
                                         }}
                                     >
                                         🗑 Eliminar

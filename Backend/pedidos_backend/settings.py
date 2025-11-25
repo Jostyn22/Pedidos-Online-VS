@@ -61,13 +61,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "pedidos_backend.wsgi.application"
 
-# BASE DE DATOS
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'pedidos_online_vs',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '3306',  
     }
 }
+
 
 # VALIDACIÓN DE CONTRASEÑAS
 AUTH_PASSWORD_VALIDATORS = [

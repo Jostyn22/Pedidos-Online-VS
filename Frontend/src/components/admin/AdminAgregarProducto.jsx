@@ -13,7 +13,8 @@ const AdminAgregarProducto = () => {
     const [formData, setFormData] = useState({
         nombre: "",
         descripcion: "",
-        precio: "",
+        precio_costo: "",
+        porcentaje_ganancia: "",
         stock: "",
         categoria_id: "",
         marca_id: "",
@@ -25,12 +26,17 @@ const AdminAgregarProducto = () => {
     const [nuevaCat, setNuevaCat] = useState("");
     const [nuevaMarca, setNuevaMarca] = useState("");
 
+    // Cargar categorías y marcas
     useEffect(() => {
         const cargarDatos = async () => {
-            const resCat = await api.get("categorias/");
-            const resMar = await api.get("marcas/");
-            setCategorias(resCat.data);
-            setMarcas(resMar.data);
+            try {
+                const resCat = await api.get("categorias/");
+                const resMar = await api.get("marcas/");
+                setCategorias(resCat.data);
+                setMarcas(resMar.data);
+            } catch (error) {
+                console.error("Error al cargar categorías o marcas:", error);
+            }
         };
         cargarDatos();
     }, []);
@@ -43,6 +49,7 @@ const AdminAgregarProducto = () => {
         setFormData({ ...formData, imagen: e.target.files[0] });
     };
 
+    // Agregar nueva categoría
     const agregarCategoria = async () => {
         if (!nuevaCat.trim()) return;
         await api.post("categorias/", { nombre: nuevaCat });
@@ -52,6 +59,7 @@ const AdminAgregarProducto = () => {
         setShowCat(false);
     };
 
+    // Agregar nueva marca
     const agregarMarca = async () => {
         if (!nuevaMarca.trim()) return;
         await api.post("marcas/", { nombre: nuevaMarca });
@@ -61,42 +69,112 @@ const AdminAgregarProducto = () => {
         setShowMarca(false);
     };
 
+    // Calcular precio de venta en tiempo real
+    const precioVenta =
+        (parseFloat(formData.precio_costo) || 0) *
+        (1 + (parseFloat(formData.porcentaje_ganancia) || 0) / 100);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = new FormData();
-        Object.entries(formData).forEach(([key, value]) => data.append(key, value));
+
+        // Convertir a números válidos antes de enviar
+        const payload = {
+            ...formData,
+            precio_costo: parseFloat(formData.precio_costo || 0),
+            porcentaje_ganancia: parseFloat(formData.porcentaje_ganancia || 0),
+            stock: parseInt(formData.stock || 0),
+        };
+
+        Object.entries(payload).forEach(([key, value]) => data.append(key, value));
 
         try {
             await api.post("productos/", data, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
-
-            setMensaje("Producto añadido con éxito");
-            setTimeout(() => navigate("/admin/productos"), 1200);
+            setMensaje("✅ Producto añadido con éxito");
+            setFormData({
+                nombre: "",
+                descripcion: "",
+                precio_costo: "",
+                porcentaje_ganancia: "",
+                stock: "",
+                categoria_id: "",
+                marca_id: "",
+                imagen: null,
+            });
+            setTimeout(() => navigate(-1), 1200);
         } catch (error) {
-            setMensaje("Error al agregar producto");
+            console.error(error.response?.data || error);
+            setMensaje("❌ Error al agregar producto");
         }
     };
 
     return (
         <div className="agregar-contenedor">
             <h2>Agregar Producto</h2>
-            {mensaje && <p className="mensaje">{mensaje}</p>}
+            {mensaje && <p className={`mensaje ${mensaje.includes("✅") ? "success" : "error"}`}>{mensaje}</p>}
 
             <form onSubmit={handleSubmit} className="form-producto">
 
-                <input type="text" name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} required />
+                <input
+                    type="text"
+                    name="nombre"
+                    placeholder="Nombre"
+                    value={formData.nombre}
+                    onChange={handleChange}
+                    required
+                />
 
-                <textarea name="descripcion" placeholder="Descripción" value={formData.descripcion} onChange={handleChange}></textarea>
+                <textarea
+                    name="descripcion"
+                    placeholder="Descripción"
+                    value={formData.descripcion}
+                    onChange={handleChange}
+                ></textarea>
 
                 <div className="fila">
-                    <input type="number" name="precio" placeholder="Precio" value={formData.precio} onChange={handleChange} required />
-                    <input type="number" name="stock" placeholder="Stock" value={formData.stock} onChange={handleChange} required />
+                    <input
+                        type="number"
+                        name="precio_costo"
+                        placeholder="Precio de costo"
+                        value={formData.precio_costo}
+                        onChange={handleChange}
+                        required
+                        min="0"
+                        step="0.01"
+                    />
+                    <input
+                        type="number"
+                        name="porcentaje_ganancia"
+                        placeholder="Porcentaje de ganancia"
+                        value={formData.porcentaje_ganancia}
+                        onChange={handleChange}
+                        required
+                        min="0"
+                        step="0.01"
+                    />
+                    <input
+                        type="number"
+                        name="stock"
+                        placeholder="Stock"
+                        value={formData.stock}
+                        onChange={handleChange}
+                        required
+                        min="0"
+                    />
                 </div>
+
+                <p className="precio-venta">Precio de venta: ${precioVenta.toFixed(2)}</p>
 
                 <div className="fila">
                     <div className="grupo-select">
-                        <select name="categoria_id" value={formData.categoria_id} onChange={handleChange} required>
+                        <select
+                            name="categoria_id"
+                            value={formData.categoria_id}
+                            onChange={handleChange}
+                            required
+                        >
                             <option value="">-- Categoría --</option>
                             {categorias.map(cat => <option key={cat.id} value={cat.id}>{cat.nombre}</option>)}
                         </select>
@@ -104,7 +182,12 @@ const AdminAgregarProducto = () => {
                     </div>
 
                     <div className="grupo-select">
-                        <select name="marca_id" value={formData.marca_id} onChange={handleChange} required>
+                        <select
+                            name="marca_id"
+                            value={formData.marca_id}
+                            onChange={handleChange}
+                            required
+                        >
                             <option value="">-- Marca --</option>
                             {marcas.map(m => <option key={m.id} value={m.id}>{m.nombre}</option>)}
                         </select>
@@ -114,7 +197,12 @@ const AdminAgregarProducto = () => {
 
                 {showCat && (
                     <div className="nuevo-dato">
-                        <input type="text" placeholder="Nueva categoría" value={nuevaCat} onChange={(e) => setNuevaCat(e.target.value)} />
+                        <input
+                            type="text"
+                            placeholder="Nueva categoría"
+                            value={nuevaCat}
+                            onChange={(e) => setNuevaCat(e.target.value)}
+                        />
                         <button type="button" onClick={agregarCategoria}>Guardar</button>
                         <button type="button" onClick={() => setShowCat(false)}>✖</button>
                     </div>
@@ -122,7 +210,12 @@ const AdminAgregarProducto = () => {
 
                 {showMarca && (
                     <div className="nuevo-dato">
-                        <input type="text" placeholder="Nueva marca" value={nuevaMarca} onChange={(e) => setNuevaMarca(e.target.value)} />
+                        <input
+                            type="text"
+                            placeholder="Nueva marca"
+                            value={nuevaMarca}
+                            onChange={(e) => setNuevaMarca(e.target.value)}
+                        />
                         <button type="button" onClick={agregarMarca}>Guardar</button>
                         <button type="button" onClick={() => setShowMarca(false)}>✖</button>
                     </div>
@@ -131,10 +224,7 @@ const AdminAgregarProducto = () => {
                 <input type="file" name="imagen" onChange={handleFile} />
 
                 <button type="submit" className="btn-guardar">Guardar</button>
-
-                <button type="button" className="btn-volver" onClick={() => navigate("/admin/inicio")}>
-                    Volver
-                </button>
+                <button type="button" className="btn-volver" onClick={() => navigate("/admin/productos")}>Volver</button>
             </form>
         </div>
     );

@@ -1,4 +1,4 @@
-from rest_framework import viewsets, filters, permissions
+from rest_framework import viewsets, filters, permissions, status
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Producto, Categoria, Marca
 from .serializers import ProductoSerializer, CategoriaSerializer, MarcaSerializer
@@ -23,8 +23,63 @@ class ProductoViewSet(viewsets.ModelViewSet):
         if usuario.rol == "VENDEDOR":
             return Producto.objects.filter(vendedor=usuario)
         return Producto.objects.filter(activo=True)
-    def perform_create(self, serializer):
-        serializer.save(vendedor=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        nombre = serializer.validated_data.get("nombre")
+        marca = serializer.validated_data.get("marca")
+        categoria = serializer.validated_data.get("categoria")
+        stock = serializer.validated_data.get("stock", 0)
+        precio_costo = serializer.validated_data.get("precio_costo") or 0
+        porcentaje_ganancia = serializer.validated_data.get("porcentaje_ganancia") or 0
+
+        producto_existente = Producto.objects.filter(
+            nombre__iexact=nombre,
+            marca=marca,
+            categoria=categoria
+        ).first()
+
+        if producto_existente:
+            producto_existente.stock += stock
+            producto_existente.precio_costo = precio_costo
+            producto_existente.porcentaje_ganancia = porcentaje_ganancia
+            producto_existente.precio = precio_costo * (1 + porcentaje_ganancia / 100)
+
+            producto_existente.save()
+
+            return Response(
+                {
+                    "mensaje": "Stock actualizado correctamente.",
+                    "producto": ProductoSerializer(producto_existente).data,
+                },
+            status=status.HTTP_200_OK,
+        )
+        precio = precio_costo * (1 + porcentaje_ganancia / 100)
+        serializer.save(vendedor=request.user, precio=precio)
+        return Response(
+            {
+                "mensaje": "Producto creado correctamente.",
+                "producto": serializer.data,
+            },
+            status=status.HTTP_201_CREATED,
+        )
+    def destroy(self, request, *args, **kwargs):
+        producto = self.get_object()
+
+        if hasattr(producto, "pedidos_detalle") and producto.pedidos_detalle.exists():
+            return Response(
+                {"detail": "No se puede eliminar este producto porque está asociado a pedidos realizados."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        
+        producto.delete()
+        return Response(
+            {"mensaje": "Producto eliminado correctamente."},
+            status=status.HTTP_200_OK
+        )
+
 class CategoriaViewSet(viewsets.ModelViewSet):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer

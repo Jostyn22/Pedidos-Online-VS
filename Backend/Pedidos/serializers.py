@@ -9,8 +9,8 @@ class PedidoDetalleSerializer(serializers.ModelSerializer):
 
 class PedidoSerializer(serializers.ModelSerializer):
     detalles = PedidoDetalleSerializer(many=True, read_only=True)
-    fecha = serializers.DateTimeField(format="%Y-%m-%d %H:%M")  # ✅ FECHA FORMATEADA
-    cliente_nombre = serializers.CharField(source="cliente.username", read_only=True)  # ✅ Nombre en vez de ID
+    fecha = serializers.DateTimeField(format="%Y-%m-%d %H:%M")  
+    cliente_nombre = serializers.CharField(source="cliente.username", read_only=True)  
 
     class Meta:
         model = Pedido

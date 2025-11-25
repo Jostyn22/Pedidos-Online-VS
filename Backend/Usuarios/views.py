@@ -41,26 +41,46 @@ class RegistrarUsuarioView(generics.CreateAPIView):
 #Eliminar usuario (solo para administradores)
 class EliminarUsuarioView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
     def delete(self, request, pk):
+
         # Solo los administradores pueden eliminar
         if request.user.rol != "ADMIN":
             return Response(
                 {"detail": "No tienes permiso para eliminar usuarios."},
                 status=status.HTTP_403_FORBIDDEN,
             )
+
         try:
             usuario = Usuario.objects.get(pk=pk)
-            #Evitar que el administrador se elimine a sí mismo
+
+            # Evitar que el administrador se elimine a sí mismo
             if usuario.id == request.user.id:
                 return Response(
                     {"detail": "No puedes eliminar tu propia cuenta."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
+
+            # 🔥 Validar si el usuario tiene pedidos como cliente
+            if usuario.pedidos_cliente.exists():
+                return Response(
+                    {"detail": "No se puede eliminar un usuario que tiene pedidos realizados como cliente."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            # 🔥 Validar si el usuario tiene pedidos como vendedor
+            if usuario.pedidos_vendedor.exists():
+                return Response(
+                    {"detail": "No se puede eliminar un usuario que tiene pedidos asignados como vendedor."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
             usuario.delete()
             return Response(
                 {"message": f"Usuario '{usuario.username}' eliminado correctamente."},
                 status=status.HTTP_200_OK,
             )
+
         except Usuario.DoesNotExist:
             return Response(
                 {"detail": "Usuario no encontrado."},
