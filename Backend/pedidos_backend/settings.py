@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "Pedidos",
     "Pagos",
     "Envios",
+    'django_extensions',
 ]
 
 # MIDDLEWARE

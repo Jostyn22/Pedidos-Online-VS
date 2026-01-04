@@ -394,6 +394,42 @@
     outline: none;
 }
 
+.tabla-envios {
+    width: 100%;
+}
+
+.tabla-envios h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #14532d;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.estado-envio {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-block;
+    text-align: center;
+}
+
+.estado-pendiente {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.estado-enviado {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.estado-entregado {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
 
 html,
 body {

@@ -24,21 +24,46 @@ def crear_pedido(request):
 
         cliente = request.user
 
-        # Se asigna vendedor del primer producto del carrito
-        vendedor = Producto.objects.get(id=carrito[0]["producto_id"]).vendedor
+        primer_producto = Producto.objects.filter(
+            id=carrito[0].get("producto_id")
+        ).first()
 
-        pedido = Pedido.objects.create(cliente=cliente, vendedor=vendedor, total=0)
+        if not primer_producto:
+            return Response({"error": "Producto no válido"}, status=400)
+
+        pedido = Pedido.objects.create(
+            cliente=cliente,
+            vendedor=primer_producto.vendedor,
+            total=0
+        )
 
         total = 0
+
         for item in carrito:
-            producto = Producto.objects.get(id=item["producto_id"])
-            cantidad = int(item["cantidad"])
+            producto = Producto.objects.filter(
+                id=item.get("producto_id")
+            ).first()
+
+            if not producto:
+                return Response({"error": "Producto no encontrado"}, status=400)
+
+            cantidad = int(item.get("cantidad", 0))
+
+            if cantidad <= 0:
+                return Response({"error": "Cantidad inválida"}, status=400)
+
+            # 🔴 VALIDACIÓN CRÍTICA DE STOCK
+            if producto.stock < cantidad:
+                return Response(
+                    {"error": f"Stock insuficiente para {producto.nombre}"},
+                    status=400
+                )
 
             PedidoDetalle.objects.create(
                 pedido=pedido,
                 producto=producto,
                 cantidad=cantidad,
-                precio=producto.precio,
+                precio=producto.precio
             )
 
             total += producto.precio * cantidad
@@ -48,8 +73,11 @@ def crear_pedido(request):
         pedido.total = total
         pedido.save()
 
-        return Response({"mensaje": "Pedido creado correctamente", "pedido_id": pedido.id})
-    
+        return Response({
+            "mensaje": "Pedido creado correctamente",
+            "pedido_id": pedido.id
+        })
+
     except Exception as e:
         print("ERROR CREANDO PEDIDO:", e)
         return Response({"error": str(e)}, status=500)

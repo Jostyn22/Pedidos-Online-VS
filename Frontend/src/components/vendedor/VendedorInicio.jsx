@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import "./VendedorInicio.css";
@@ -7,11 +8,13 @@ const VendedorInicio = () => {
     const navigate = useNavigate();
     const [vista, setVista] = useState("inicio");
     const [pedidos, setPedidos] = useState([]);
+    const [envios, setEnvios] = useState([]);
     const [productos, setProductos] = useState([]);
     const [usuario, setUsuario] = useState({});
     const [mensajeExito, setMensajeExito] = useState("");
     const [busquedaCliente, setBusquedaCliente] = useState("");
     const [busquedaProducto, setBusquedaProducto] = useState("");
+
 
     const formatearFecha = (valor) => {
         if (!valor) return "—";
@@ -24,6 +27,7 @@ const VendedorInicio = () => {
 
     useEffect(() => {
         if (vista === "pedidos") obtenerPedidos();
+        if (vista === "envios") obtenerEnvios();
         if (vista === "productos") obtenerProductos();
         if (vista === "perfil") obtenerPerfil();
     }, [vista]);
@@ -52,6 +56,37 @@ const VendedorInicio = () => {
             console.error("Error al cargar productos:", error);
         }
     };
+    const obtenerEnvios = async () => {
+        try {
+            const response = await api.get("envios/vendedor/");
+            setEnvios(response.data);
+        } catch (error) {
+            console.error("Error al cargar envíos:", error);
+        }
+    };
+    const cambiarEstado = async (envioId, nuevoEstado) => {
+        try {
+            await axios.patch(
+                `http://127.0.0.1:8000/api/envios/estado/${envioId}/`,
+                { estado: nuevoEstado },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("access")}`,
+                    },
+                }
+            );
+
+            setEnvios((prev) =>
+                prev.map((e) =>
+                    e.id === envioId ? { ...e, estado: nuevoEstado } : e
+                )
+            );
+        } catch (error) {
+            console.error("Error al cambiar estado:", error);
+            alert("No se pudo actualizar el estado del envío");
+        }
+    };
+
 
     const obtenerPerfil = async () => {
         try {
@@ -95,6 +130,7 @@ const VendedorInicio = () => {
                 <ul className="vendedor-menu">
                     <li onClick={() => setVista("inicio")}>Inicio</li>
                     <li onClick={() => setVista("pedidos")}>Pedidos</li>
+                    <li onClick={() => setVista("envios")}>Envíos</li>
                     <li onClick={() => setVista("productos")}>Productos</li>
                     <li onClick={() => setVista("perfil")}>Perfil</li>
                 </ul>
@@ -177,6 +213,61 @@ const VendedorInicio = () => {
                         </table>
                     </div>
                 )}
+
+                {vista === "envios" && (
+                    <div className="tabla-container">
+                        <h2 className="titulo-productos">Envíos</h2>
+
+                        <table className="tabla-vendedor">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Pedido</th>
+                                    <th>Dirección</th>
+                                    <th>Estado</th>
+                                    <th>Fecha envío</th>
+                                    <th>Fecha entrega</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {envios.map((e) => (
+                                    <tr key={e.id}>
+                                        <td>{e.id}</td>
+                                        <td>{e.pedido}</td>
+                                        <td>{e.direccion_envio}</td>
+                                        <td>{e.estado}</td>
+                                        <td>{formatearFecha(e.fecha_envio)}</td>
+                                        <td>{formatearFecha(e.fecha_entrega)}</td>
+                                        <td>
+                                            {e.estado !== "ENTREGADO" ? (
+                                                <button
+                                                    className="btn-estado"
+                                                    onClick={async () => {
+                                                        try {
+                                                            await api.patch(`envios/estado/${e.id}/`);
+                                                            obtenerEnvios();
+                                                        } catch (error) {
+                                                            console.error("Error cambiando estado del envío:", error);
+                                                        }
+                                                    }}
+                                                >
+                                                    Siguiente estado
+                                                </button>
+                                            ) : (
+                                                <span className="estado-final">Completado</span>
+                                            )}
+                                        </td>
+
+
+                                    </tr>
+                                ))}
+                            </tbody>
+
+                        </table>
+                    </div>
+                )}
+
 
                 {vista === "productos" && (
                     <div className="tabla-container">

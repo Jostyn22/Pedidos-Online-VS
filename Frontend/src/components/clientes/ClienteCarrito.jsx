@@ -4,6 +4,7 @@ import "./ClienteCarrito.css";
 
 const ClienteCarrito = () => {
     const [carrito, setCarrito] = useState([]);
+    const [metodoPago, setMetodoPago] = useState("EFECTIVO");
 
     useEffect(() => {
         const data = JSON.parse(localStorage.getItem("carrito")) || [];
@@ -30,12 +31,24 @@ const ClienteCarrito = () => {
 
     const confirmarCompra = async () => {
         if (carrito.length === 0) return alert("Tu carrito está vacío.");
+
         try {
-            await api.post("pedidos/crear/", { carrito });
+            // Primero creamos el pedido
+            const pedidoRes = await api.post("pedidos/crear/", { carrito });
+            const pedidoId = pedidoRes.data.pedido_id;
+
+            // Luego registramos el pago
+            const pagoRes = await api.post("pagos/registrar/", {
+                pedido: pedidoId,
+                metodo: metodoPago,
+                monto: Number(calcularTotal()),
+            });
+
+            alert("Compra y pago realizados correctamente!");
             localStorage.removeItem("carrito");
             setCarrito([]);
         } catch (error) {
-            alert("Ocurrió un problema al generar el pedido");
+            console.log(error.response.data);
         }
     };
 
@@ -99,6 +112,15 @@ const ClienteCarrito = () => {
                     <div className="resumen-row envio">
                         <span>Envío</span>
                         <label><input type="radio" defaultChecked /> Recogida en el local</label>
+                    </div>
+
+                    <div className="resumen-row pago">
+                        <span>Método de pago:</span>
+                        <select value={metodoPago} onChange={e => setMetodoPago(e.target.value)}>
+                            <option value="EFECTIVO">Efectivo</option>
+                            <option value="TARJETA">Tarjeta</option>
+                            <option value="TRANSFERENCIA">Transferencia</option>
+                        </select>
                     </div>
 
                     <div className="resumen-row total">

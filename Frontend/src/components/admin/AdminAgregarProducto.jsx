@@ -224,7 +224,7 @@ const AdminAgregarProducto = () => {
                 <input type="file" name="imagen" onChange={handleFile} />
 
                 <button type="submit" className="btn-guardar">Guardar</button>
-                <button type="button" className="btn-volver" onClick={() => navigate("/admin/productos")}>Volver</button>
+                <button type="button" className="btn-volver" onClick={() => navigate((-1), 1200)}>Volver</button>
             </form>
         </div>
     );

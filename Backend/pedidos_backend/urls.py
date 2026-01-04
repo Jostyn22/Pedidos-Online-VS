@@ -11,6 +11,8 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path("api/pedidos/", include("Pedidos.urls")),
+    path("api/pagos/", include("Pagos.urls")),
+    path('api/envios/', include('Envios.urls')),
 ]
 
 if settings.DEBUG:
