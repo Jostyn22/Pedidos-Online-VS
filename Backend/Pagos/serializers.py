@@ -1,8 +1,13 @@
 from rest_framework import serializers
 from .models import Pago
-from Pedidos.models import Pedido
 
 class PagoSerializer(serializers.ModelSerializer):
+    # Campo extra para mostrar el nombre del cliente asociado al pedido
+    pedido_cliente_nombre = serializers.CharField(
+        source="pedido.cliente.username",  # Ajusta según tu modelo
+        read_only=True
+    )
+
     class Meta:
         model = Pago
         fields = "__all__"

@@ -33,22 +33,22 @@ const ClienteCarrito = () => {
         if (carrito.length === 0) return alert("Tu carrito está vacío.");
 
         try {
-            // Primero creamos el pedido
             const pedidoRes = await api.post("pedidos/crear/", { carrito });
             const pedidoId = pedidoRes.data.pedido_id;
 
-            // Luego registramos el pago
             const pagoRes = await api.post("pagos/registrar/", {
                 pedido: pedidoId,
                 metodo: metodoPago,
                 monto: Number(calcularTotal()),
+                estado_pago: "PAGADO",
             });
 
             alert("Compra y pago realizados correctamente!");
             localStorage.removeItem("carrito");
             setCarrito([]);
         } catch (error) {
-            console.log(error.response.data);
+            console.log(error.response?.data || error);
+            alert("Hubo un error al procesar tu compra");
         }
     };
 

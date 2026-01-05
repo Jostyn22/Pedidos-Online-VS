@@ -1,11 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAdminUser
 from rest_framework import status
 from django.utils import timezone
 from rest_framework.permissions import IsAuthenticated
 from .models import Envio
 from .serializers import EnvioSerializer
 from Pedidos.models import Pedido
+from rest_framework.generics import DestroyAPIView
 
 class CrearEnvioAPIView(APIView):
 
@@ -93,3 +96,12 @@ class CambiarEstadoEnvioAPIView(APIView):
             {"mensaje": "Estado del envío actualizado"},
             status=status.HTTP_200_OK
         )
+class ListarEnviosAdminAPIView(ListAPIView):
+    queryset = Envio.objects.all().order_by("-id")
+    serializer_class = EnvioSerializer
+    permission_classes = [IsAdminUser]
+     
+class EliminarEnvioAdminAPIView(DestroyAPIView):
+    queryset = Envio.objects.all()
+    serializer_class = EnvioSerializer
+    permission_classes = [IsAdminUser]    

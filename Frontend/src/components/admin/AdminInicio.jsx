@@ -23,7 +23,11 @@ const AdminInicio = () => {
     const [pedidos, setPedidos] = useState([]);
     const [busquedaPedido, setBusquedaPedido] = useState("");
     const [filtroEstado, setFiltroEstado] = useState("");
-
+    const [envios, setEnvios] = useState([]);
+    const [pagos, setPagos] = useState([]);
+    const [filtroMetodo, setFiltroMetodo] = useState("");
+    const [busquedaPago, setBusquedaPago] = useState("");
+    const [filtroEstadoEnvio, setFiltroEstadoEnvio] = useState("");
 
     const handleLogout = () => {
         localStorage.clear();
@@ -65,8 +69,16 @@ const AdminInicio = () => {
         p.id.toString().includes(busquedaPedido)
     );
     const eliminarPedido = async (id) => {
-        const confirmar = window.confirm("¿Seguro que deseas eliminar este pedido?");
-        if (!confirmar) return;
+        const pedido = pedidos.find(p => p.id === id);
+        if (!pedido) return;
+
+        // No permitir eliminar si el pedido tiene estado diferente a "PENDIENTE"
+        if (pedido.estado !== "PENDIENTE") {
+            alert("No se puede eliminar un pedido que ya ha sido procesado o realizado por un usuario.");
+            return;
+        }
+
+        if (!window.confirm("¿Seguro que deseas eliminar este pedido?")) return;
 
         try {
             await api.delete(`pedidos/eliminar/${id}/`);
@@ -75,11 +87,76 @@ const AdminInicio = () => {
             alert("No se pudo eliminar el pedido");
         }
     };
+    const obtenerPagosAdmin = async () => {
+        try {
+            const res = await api.get("pagos/admin/listar/"); // <- este endpoint devuelve todos
+            setPagos(res.data);
+        } catch (error) {
+            console.error("Error cargando pagos:", error);
+        }
+    };
+
+    const cambiarEstadoPago = async (id, nuevoEstado) => {
+        try {
+            await api.patch(`pagos/${id}/cambiar-estado/`, { estado_pago: nuevoEstado });
+            obtenerPagosAdmin(); // refresca la tabla de pagos
+        } catch (error) {
+            console.error("Error cambiando estado del pago:", error);
+        }
+    };
+    const eliminarPago = async (id) => {
+        if (!window.confirm("¿Seguro que deseas eliminar este pago?")) return;
+
+        try {
+            await api.delete(`pagos/eliminar/${id}/`);
+            obtenerPagosAdmin(); // refresca la tabla
+        } catch (error) {
+            console.error("Error eliminando pago:", error);
+            alert("No se pudo eliminar el pago.");
+        }
+    };
+
+    const obtenerEnviosAdmin = async () => {
+        try {
+            const res = await api.get("envios/admin/listar/");
+            setEnvios(res.data);
+        } catch (error) {
+            console.error("Error cargando envíos:", error);
+        }
+    };
+    const cambiarEstadoAdmin = async (id, estado) => {
+        try {
+            await api.patch(`envios/cambiar-estado/${id}/`, { estado });
+            obtenerEnviosAdmin();
+        } catch (error) {
+            console.error("Error cambiando estado:", error);
+        }
+    };
+    const eliminarEnvio = async (id) => {
+        if (!window.confirm("¿Eliminar este envío?")) return;
+
+        try {
+            await api.delete(`envios/admin/eliminar/${id}/`);
+            obtenerEnviosAdmin();
+        } catch (error) {
+            console.error("Error eliminando envío:", error);
+        }
+    };
+    const formatearFecha = (fechaString) => {
+        if (!fechaString) return "—";
+        const fecha = new Date(fechaString);
+        if (isNaN(fecha)) return "—";
+        const dia = fecha.getDate().toString().padStart(2, "0");
+        const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
+        const anio = fecha.getFullYear();
+        return `${dia}/${mes}/${anio}`;
+    };
 
     const cambiarEstadoPedido = async (id, nuevoEstado) => {
         try {
             await api.patch(`pedidos/${id}/`, { estado: nuevoEstado });
-            obtenerPedidos();
+            obtenerPedidos();       // refresca la tabla de pedidos
+            if (nuevoEstado === "LISTO") obtenerEnviosAdmin(); // refresca envíos automáticamente
         } catch {
             setMensaje("No se pudo actualizar el estado del pedido.");
         }
@@ -105,10 +182,13 @@ const AdminInicio = () => {
         }
     };
 
+
     useEffect(() => {
         if (vista === "usuarios") obtenerUsuarios(rolFiltro);
         if (vista === "productos") obtenerProductos();
         if (vista === "pedidos") obtenerPedidos();
+        if (vista === "pagos") obtenerPagosAdmin();
+        if (vista === "envios") obtenerEnviosAdmin();
     }, [vista, rolFiltro]);
 
     useEffect(() => {
@@ -140,22 +220,46 @@ const AdminInicio = () => {
     };
 
     const eliminarUsuario = async (id) => {
+        const usuario = usuarios.find(u => u.id === id);
+        if (!usuario) return;
+
+        // Si es cliente y tiene pedidos
+        const tienePedidos = pedidos.some(p => p.cliente === id);
+        // Si es vendedor y tiene productos
+        const tieneProductos = productos.some(p => p.vendedor === id);
+
+        if (tienePedidos || tieneProductos) {
+            alert("No se puede eliminar un usuario que tiene pedidos o productos asociados.");
+            return;
+        }
+
         if (!window.confirm("¿Seguro que deseas eliminar este usuario?")) return;
+
         try {
             await api.delete(`usuarios/eliminar/${id}/`);
             obtenerUsuarios(rolFiltro);
         } catch {
-            setMensaje("No se pudo eliminar el usuario.");
+            alert("No se pudo eliminar el usuario.");
         }
     };
 
     const eliminarProducto = async (id) => {
+        const productoEnPedido = pedidos.some(p =>
+            p.detalles?.some(d => d.producto === id)
+        );
+
+        if (productoEnPedido) {
+            alert("No se puede eliminar un producto que está asociado a un pedido.");
+            return;
+        }
+
         if (!window.confirm("¿Seguro que deseas eliminar este producto?")) return;
+
         try {
             await api.delete(`productos/${id}/`);
             obtenerProductos();
         } catch {
-            setMensaje("No se pudo eliminar el producto.");
+            alert("No se pudo eliminar el producto.");
         }
     };
 
@@ -482,6 +586,196 @@ const AdminInicio = () => {
                 )}
 
             </div>
+            {/* PAGOS */}
+            {vista === "pagos" && (
+                <div className="admin-usuarios-container">
+                    <h2>Gestión de Pagos</h2>
+
+                    {/* FILTROS */}
+                    <div className="controles-superiores" style={{ marginBottom: "15px" }}>
+                        <input
+                            type="text"
+                            placeholder="Buscar por cliente o ID..."
+                            value={busquedaPago} // crear estado busquedaPago
+                            onChange={(e) => setBusquedaPago(e.target.value)}
+                            className="input-busqueda"
+                        />
+
+                        <div className="filtro-rol">
+                            <label>Método de pago:</label>
+                            <select
+                                value={filtroMetodo} // crear estado filtroMetodo
+                                onChange={(e) => setFiltroMetodo(e.target.value)}
+                            >
+                                <option value="">Todos</option>
+                                <option value="EFECTIVO">Efectivo</option>
+                                <option value="TARJETA">Tarjeta</option>
+                                <option value="TRANSFERENCIA">Transferencia</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <table className="tabla-usuarios">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Pedido</th>
+                                <th>Cliente</th>
+                                <th>Monto</th>
+                                <th>Método</th>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {pagos.length > 0 ? (
+                                pagos
+                                    .filter(p =>
+                                        (filtroMetodo === "" || p.metodo === filtroMetodo) &&
+                                        (busquedaPago === "" ||
+                                            p.pedido_cliente_nombre?.toLowerCase().includes(busquedaPago.toLowerCase()) ||
+                                            String(p.pedido).includes(busquedaPago))
+                                    )
+                                    .map((p) => (
+                                        <tr key={p.id}>
+                                            <td>{p.id}</td>
+                                            <td>{p.pedido}</td>
+                                            <td>{p.pedido_cliente_nombre}</td>
+                                            <td>${Number(p.monto).toFixed(2)}</td>
+                                            <td>{p.metodo}</td>
+                                            <td>{p.estado_pago}</td>
+                                            <td>{formatearFecha(p.fecha_pago)}</td>
+                                            <td className="td-acciones">
+                                                <select
+                                                    value={p.estado_pago}
+                                                    onChange={(ev) => {
+                                                        if (p.estado_pago === "PAGADO") {
+                                                            alert("No se puede cambiar el estado de un pago que ya está pagado.");
+                                                            return;
+                                                        }
+                                                        cambiarEstadoPago(p.id, ev.target.value);
+                                                    }}
+                                                >
+                                                    <option value="PENDIENTE">Pendiente</option>
+                                                    <option value="PAGADO">Pagado</option>
+                                                    <option value="RECHAZADO">Rechazado</option>
+                                                </select>
+
+                                                <button
+                                                    className="btn-eliminar"
+                                                    onClick={() => {
+                                                        if (p.estado_pago === "PAGADO") {
+                                                            alert("No se puede eliminar un pago que ya está pagado.");
+                                                            return;
+                                                        }
+                                                        eliminarPago(p.id);
+                                                    }}
+                                                >
+                                                    Eliminar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="8">No se encontraron pagos.</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
+            {/* ENVÍOS */}
+            {vista === "envios" && (
+                <div className="admin-usuarios-container">
+                    <h2>Gestión de Envíos</h2>
+
+                    {/* FILTRO POR ESTADO */}
+                    <div className="controles-superiores" style={{ marginBottom: "15px" }}>
+                        <label>Filtrar por estado:</label>
+                        <select
+                            value={filtroEstadoEnvio}
+                            onChange={(e) => setFiltroEstadoEnvio(e.target.value)}
+                            style={{ marginLeft: "10px", padding: "4px 8px" }}
+                        >
+                            <option value="">Todos</option>
+                            <option value="PENDIENTE">Pendiente</option>
+                            <option value="EN CAMINO">En camino</option>
+                            <option value="ENTREGADO">Entregado</option>
+                            <option value="CANCELADO">Cancelado</option>
+                        </select>
+                    </div>
+
+                    <table className="tabla-usuarios">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Pedido</th>
+                                <th>Dirección</th>
+                                <th>Estado</th>
+                                <th>Fecha envío</th>
+                                <th>Fecha entrega</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {envios.length > 0 ? (
+                                envios
+                                    .filter(e => filtroEstadoEnvio === "" || e.estado === filtroEstadoEnvio)
+                                    .map((e) => (
+                                        <tr key={e.id}>
+                                            <td>{e.id}</td>
+                                            <td>{e.pedido}</td>
+                                            <td>{e.direccion_envio}</td>
+                                            <td>{e.estado}</td>
+                                            <td>{formatearFecha(e.fecha_envio)}</td>
+                                            <td>{formatearFecha(e.fecha_entrega)}</td>
+                                            <td className="td-acciones">
+                                                <select
+                                                    value={e.estado}
+                                                    onChange={(ev) => {
+                                                        if (e.estado === "ENTREGADO") {
+                                                            alert("No se puede cambiar el estado de un envío que ya ha sido entregado.");
+                                                            return;
+                                                        }
+                                                        cambiarEstadoAdmin(e.id, ev.target.value);
+                                                    }}
+                                                >
+                                                    <option value="PENDIENTE">Pendiente</option>
+                                                    <option value="EN CAMINO">En camino</option>
+                                                    <option value="ENTREGADO">Entregado</option>
+                                                    <option value="CANCELADO">Cancelado</option>
+                                                </select>
+
+                                                <button
+                                                    className="btn-eliminar"
+                                                    onClick={() => {
+                                                        if (e.estado === "ENTREGADO") {
+                                                            alert("No se puede eliminar un envío que ya ha sido entregado.");
+                                                            return;
+                                                        }
+                                                        eliminarEnvio(e.id);
+                                                    }}
+                                                >
+                                                    Eliminar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="7">No se encontraron envíos.</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
+
+
 
             <footer className="admin-footer">
                 © {new Date().getFullYear()} Sistema de Pedidos Online VS — Administrador

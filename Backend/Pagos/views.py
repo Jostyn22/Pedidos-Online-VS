@@ -67,6 +67,13 @@ class PagoViewSet(viewsets.ViewSet):
         pago = procesar_pago(pago)
 
         return Response({"mensaje": "Pago registrado correctamente", "pago": PagoSerializer(pago).data}, status=201)
+    # en tu PagoViewSet
+    @action(detail=False, methods=['get'], url_path='admin/listar', permission_classes=[IsAdminUser])
+    def listar_admin(self, request):
+        pagos = Pago.objects.all().order_by('-fecha_pago')
+        serializer = PagoSerializer(pagos, many=True)
+        return Response(serializer.data)
+
     @action(detail=False, methods=['get'])
     def mis_pagos(self, request):
         """Listar todos los pagos del usuario autenticado."""

@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     "Compras",
     "Pedidos",
     "Pagos",
-    "Envios",
+    'Envios.apps.EnviosConfig',
     'django_extensions',
 ]
 

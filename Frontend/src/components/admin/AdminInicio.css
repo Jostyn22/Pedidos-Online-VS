@@ -417,3 +417,41 @@ html {
 .estado-btn.inactivo:hover {
     background: #fecaca;
 }
+
+/* Botones de acciones más pequeños */
+.td-acciones .btn-eliminar,
+.td-acciones .btn-icon,
+.td-acciones select {
+    padding: 4px 6px;
+    /* Reducimos el padding */
+    font-size: 0.75rem;
+    /* Fuente más pequeña */
+    min-width: auto;
+    /* Evita que se expandan demasiado */
+}
+
+/* Botón de estado más compacto */
+.estado-btn {
+    padding: 4px 6px;
+    font-size: 0.75rem;
+}
+
+/* Botón icono más pequeño */
+.btn-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+}
+
+/* Select de cambiar estado más compacto */
+.td-acciones select {
+    width: auto;
+    /* Ajusta al contenido */
+    min-width: 80px;
+    /* Opcional, para que no quede demasiado pequeño */
+    padding: 3px 5px;
+    /* Más compacto */
+    font-size: 0.75rem;
+    /* Fuente más pequeña */
+    border-radius: 6px;
+}

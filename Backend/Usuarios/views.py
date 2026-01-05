@@ -61,14 +61,12 @@ class EliminarUsuarioView(APIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            # 🔥 Validar si el usuario tiene pedidos como cliente
             if usuario.pedidos_cliente.exists():
                 return Response(
                     {"detail": "No se puede eliminar un usuario que tiene pedidos realizados como cliente."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            # 🔥 Validar si el usuario tiene pedidos como vendedor
             if usuario.pedidos_vendedor.exists():
                 return Response(
                     {"detail": "No se puede eliminar un usuario que tiene pedidos asignados como vendedor."},
