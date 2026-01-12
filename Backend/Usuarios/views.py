@@ -84,7 +84,6 @@ class EliminarUsuarioView(APIView):
                 {"detail": "Usuario no encontrado."},
                 status=status.HTTP_404_NOT_FOUND,
             )
-
 # Login con JWT
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -150,7 +149,7 @@ class ListarUsuariosView(generics.ListAPIView):
     serializer_class = UsuarioSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter]  
-    search_fields = ["username", "email", "rol"]  # campos donde buscar
+    search_fields = ["username", "email", "rol"] 
     def get_queryset(self):
         # Solo permitir que el admin acceda
         if self.request.user.rol != "ADMIN":

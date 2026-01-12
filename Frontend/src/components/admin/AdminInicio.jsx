@@ -19,6 +19,10 @@ const AdminInicio = () => {
     const [productos, setProductos] = useState([]);
     const [busquedaProducto, setBusquedaProducto] = useState("");
     const [marcaFiltro, setMarcaFiltro] = useState("");
+    const [mostrarDescuento, setMostrarDescuento] = useState(false);
+    const [porcentajeDescuento, setPorcentajeDescuento] = useState("");
+    const [categorias, setCategorias] = useState([]);
+    const [categoriaDescuento, setCategoriaDescuento] = useState("");
     // PEDIDOS
     const [pedidos, setPedidos] = useState([]);
     const [busquedaPedido, setBusquedaPedido] = useState("");
@@ -54,6 +58,9 @@ const AdminInicio = () => {
         } catch (error) {
             setMensaje("Error al cargar productos.");
         }
+        const res = await api.get("productos/");
+        console.log("PRODUCTOS BACKEND:", res.data);
+        setProductos(res.data);
     };
 
     const obtenerPedidos = async () => {
@@ -185,7 +192,10 @@ const AdminInicio = () => {
 
     useEffect(() => {
         if (vista === "usuarios") obtenerUsuarios(rolFiltro);
-        if (vista === "productos") obtenerProductos();
+        if (vista === "productos") {
+            obtenerProductos();
+            obtenerCategorias();
+        }
         if (vista === "pedidos") obtenerPedidos();
         if (vista === "pagos") obtenerPagosAdmin();
         if (vista === "envios") obtenerEnviosAdmin();
@@ -261,6 +271,27 @@ const AdminInicio = () => {
         } catch {
             alert("No se pudo eliminar el producto.");
         }
+    };
+    const aplicarDescuento = async () => {
+        if (!categoriaDescuento || !porcentajeDescuento) {
+            alert("Seleccione categoría y porcentaje");
+            return;
+        }
+
+        await api.patch("productos/aplicar-descuento-categoria/", {
+            categoria_id: categoriaDescuento,
+            porcentaje_descuento: porcentajeDescuento,
+        });
+
+        setMostrarDescuento(false);
+        setCategoriaDescuento("");
+        setPorcentajeDescuento("");
+        obtenerProductos();
+    };
+
+    const obtenerCategorias = async () => {
+        const res = await api.get("categorias/");
+        setCategorias(res.data);
     };
 
     return (
@@ -388,6 +419,15 @@ const AdminInicio = () => {
                                 Agregar Producto
                             </button>
 
+                            <button
+                                onClick={() => setMostrarDescuento(!mostrarDescuento)}
+                                className="btn-agregar"
+                                style={{ background: "#f59e0b" }}
+                            >
+                                Aplicar descuento
+                            </button>
+
+
                             {/* DERECHA → Buscador + Filtro */}
                             <div className="controles-superiores" style={{ display: "flex", gap: "15px" }}>
 
@@ -416,6 +456,59 @@ const AdminInicio = () => {
 
                             </div>
                         </div>
+                        {/* PANEL DESCUENTO POR CATEGORÍA */}
+                        {mostrarDescuento && (
+                            <div
+                                style={{
+                                    marginBottom: "20px",
+                                    padding: "15px",
+                                    background: "#fff7ed",
+                                    border: "1px solid #f59e0b",
+                                    borderRadius: "8px",
+                                    display: "flex",
+                                    gap: "15px",
+                                    alignItems: "center"
+                                }}
+                            >
+                                <select
+                                    value={categoriaDescuento}
+                                    onChange={(e) => setCategoriaDescuento(e.target.value)}
+                                    style={{ padding: "8px", borderRadius: "6px" }}
+                                >
+                                    <option value="">Seleccione categoría</option>
+                                    {categorias.map((c) => (
+                                        <option key={c.id} value={c.id}>
+                                            {c.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max="90"
+                                    placeholder="% descuento"
+                                    value={porcentajeDescuento}
+                                    onChange={(e) => setPorcentajeDescuento(e.target.value)}
+                                    style={{
+                                        width: "120px",
+                                        padding: "8px",
+                                        borderRadius: "6px",
+                                        border: "1px solid #ccc"
+                                    }}
+                                />
+
+                                <button
+                                    className="btn-agregar"
+                                    style={{ background: "#16a34a" }}
+                                    onClick={aplicarDescuento}
+                                >
+                                    Aplicar
+                                </button>
+                            </div>
+                        )}
+
+
 
                         <table className="tabla-usuarios">
                             <thead>
@@ -441,7 +534,34 @@ const AdminInicio = () => {
                                             <td>{p.nombre}</td>
                                             <td>{p.categoria?.nombre || "Sin categoría"}</td>
                                             <td>{p.marca?.nombre || "Sin marca"}</td>
-                                            <td>${Number(p.precio).toFixed(2)}</td>
+                                            <td>
+                                                {p.precio_final && Number(p.precio_final) < Number(p.precio) ? (
+                                                    <>
+                                                        <span style={{ textDecoration: "line-through", color: "#777" }}>
+                                                            ${Number(p.precio).toFixed(2)}
+                                                        </span>
+                                                        <br />
+                                                        <strong style={{ color: "#15803d" }}>
+                                                            ${Number(p.precio_final).toFixed(2)}
+                                                        </strong>
+                                                        <span
+                                                            style={{
+                                                                marginLeft: "6px",
+                                                                background: "#dcfce7",
+                                                                color: "#15803d",
+                                                                padding: "2px 6px",
+                                                                borderRadius: "6px",
+                                                                fontSize: "12px",
+                                                                fontWeight: "bold",
+                                                            }}
+                                                        >
+                                                            -{p.porcentaje_descuento}%
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <>${Number(p.precio).toFixed(2)}</>
+                                                )}
+                                            </td>
 
                                             <td>
                                                 {p.imagen ? (

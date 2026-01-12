@@ -2,7 +2,7 @@ from rest_framework import viewsets, filters, permissions, status
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Producto, Categoria, Marca
 from .serializers import ProductoSerializer, CategoriaSerializer, MarcaSerializer
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 
 class ProductoViewSet(viewsets.ModelViewSet):
@@ -13,8 +13,10 @@ class ProductoViewSet(viewsets.ModelViewSet):
     ordering_fields = ['precio', 'nombre', 'stock']
     ordering = ['nombre']
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+       
 
     def get_queryset(self):
+    
         usuario = self.request.user
         if not usuario.is_authenticated:
             return Producto.objects.filter(activo=True)
@@ -65,6 +67,7 @@ class ProductoViewSet(viewsets.ModelViewSet):
             },
             status=status.HTTP_201_CREATED,
         )
+        
     def destroy(self, request, *args, **kwargs):
         producto = self.get_object()
 
@@ -79,7 +82,54 @@ class ProductoViewSet(viewsets.ModelViewSet):
             {"mensaje": "Producto eliminado correctamente."},
             status=status.HTTP_200_OK
         )
+    @action(detail=False, methods=["patch"], url_path="aplicar-descuento-categoria")
+    def aplicar_descuento_categoria(self, request):
+        usuario = request.user
 
+        if not usuario.is_authenticated or usuario.rol != "ADMIN":
+            return Response(
+                {"error": "No autorizado"},
+                status=status.HTTP_403_FORBIDDEN
+        )
+
+        categoria_id = request.data.get("categoria_id")
+        porcentaje = request.data.get("porcentaje_descuento")
+
+        if categoria_id is None or porcentaje is None:
+            return Response(
+                {"error": "Debe enviar categoria_id y porcentaje_descuento"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            porcentaje = float(porcentaje)
+            if porcentaje < 0 or porcentaje > 100:
+                raise ValueError
+        except ValueError:
+            return Response(
+                {"error": "Porcentaje inválido"},
+                status=status.HTTP_400_BAD_REQUEST
+        )
+
+        productos = Producto.objects.filter(categoria_id=categoria_id)
+
+        if not productos.exists():
+             return Response(
+                {"mensaje": "No hay productos en esa categoría"},
+                status=status.HTTP_200_OK
+            )
+
+        for producto in productos:
+            producto.porcentaje_descuento = porcentaje
+            producto.save()  # recalcula precio y precio_final
+
+        return Response(
+            {
+                "mensaje": f"Descuento {porcentaje}% aplicado correctamente",
+                "productos_actualizados": productos.count()
+            },
+            status=status.HTTP_200_OK
+    )
 class CategoriaViewSet(viewsets.ModelViewSet):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer

@@ -6,6 +6,10 @@ const AdminProductos = () => {
     const [productos, setProductos] = useState([]);
     const [mensaje, setMensaje] = useState("");
     const [colorMensaje, setColorMensaje] = useState("");
+    const [mostrarDescuento, setMostrarDescuento] = useState(false);
+    const [categorias, setCategorias] = useState([]);
+    const [categoriaId, setCategoriaId] = useState("");
+    const [porcentaje, setPorcentaje] = useState("");
     const navigate = useNavigate();
 
     const obtenerProductos = async () => {
@@ -19,9 +23,18 @@ const AdminProductos = () => {
             setTimeout(() => setMensaje(""), 4000);
         }
     };
+    const obtenerCategorias = async () => {
+        try {
+            const response = await api.get("categorias/");
+            setCategorias(response.data);
+        } catch (error) {
+            console.error("Error al cargar categorías");
+        }
+    };
 
     useEffect(() => {
         obtenerProductos();
+        obtenerCategorias();
     }, []);
 
     const eliminarProducto = async (id) => {
@@ -46,6 +59,33 @@ const AdminProductos = () => {
             setTimeout(() => setMensaje(""), 4000);
         }
     };
+    const aplicarDescuento = async () => {
+        if (!categoriaId || !porcentaje) {
+            setMensaje("Seleccione categoría y porcentaje");
+            setColorMensaje("#dc2626");
+            return;
+        }
+
+        try {
+            await api.patch("productos/aplicar-descuento-categoria/", {
+                categoria_id: categoriaId,
+                porcentaje_descuento: porcentaje,
+            });
+
+            setMensaje("Descuento aplicado correctamente");
+            setColorMensaje("#16a34a");
+            setMostrarDescuento(false);
+            setCategoriaId("");
+            setPorcentaje("");
+            obtenerProductos();
+        } catch (error) {
+            setMensaje(
+                error.response?.data?.error || "Error al aplicar descuento"
+            );
+            setColorMensaje("#dc2626");
+        }
+    };
+
 
     return (
         <div style={{ padding: "30px", minHeight: "100vh" }}>
@@ -67,6 +107,22 @@ const AdminProductos = () => {
                     }}
                 >
                     Agregar Producto
+                </button>
+
+                <button
+                    onClick={() => setMostrarDescuento(!mostrarDescuento)}
+                    style={{
+                        padding: "10px 18px",
+                        background: "#f59e0b",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                    }}
+                >
+                    Aplicar descuento
                 </button>
             </div>
 

@@ -12,28 +12,50 @@ const CatalogoProductos = () => {
     const [orden, setOrden] = useState("");
     const [mensaje, setMensaje] = useState("");
 
+    /* =========================
+       AGREGAR AL CARRITO
+       ========================= */
     const agregarAlCarrito = (prod) => {
         let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-        const existente = carrito.find(item => item.producto_id === prod.id);
+        const precioBase = Number(prod.precio); // siempre el precio original
+
+        const existente = carrito.find(
+            (item) => item.producto_id === prod.id
+        );
 
         if (existente) {
+            if (existente.cantidad >= prod.stock) {
+                alert("No hay más stock disponible para este producto");
+                return;
+            }
             existente.cantidad += 1;
         } else {
+            if (prod.stock <= 0) {
+                alert("Producto sin stock");
+                return;
+            }
+
             carrito.push({
                 producto_id: prod.id,
                 nombre: prod.nombre,
                 imagen: prod.imagen,
-                precio: parseFloat(prod.precio),
-                cantidad: 1
+                precio: Number(prod.precio),         // siempre el precio base
+                precio_final: prod.precio_final || null,  // guardar precio con descuento si existe
+                porcentaje_descuento: prod.porcentaje_descuento,
+                cantidad: 1,
             });
         }
 
         localStorage.setItem("carrito", JSON.stringify(carrito));
-
+        alert("Producto agregado al carrito");
     };
 
-    //Obtener productos
+
+
+    /* =========================
+       OBTENER DATOS
+       ========================= */
     const obtenerProductos = async () => {
         try {
             const params = new URLSearchParams();
@@ -51,29 +73,19 @@ const CatalogoProductos = () => {
             setProductos(response.data);
             setMensaje("");
         } catch (error) {
-            console.error("Error al obtener productos:", error);
+            console.error(error);
             setMensaje("No se pudieron cargar los productos.");
         }
     };
 
-    //Obtener categorías
     const obtenerCategorias = async () => {
-        try {
-            const response = await api.get("categorias/");
-            setCategorias(response.data);
-        } catch (error) {
-            console.error("Error al obtener categorías:", error);
-        }
+        const res = await api.get("categorias/");
+        setCategorias(res.data);
     };
 
-    //Obtener marcas
     const obtenerMarcas = async () => {
-        try {
-            const response = await api.get("marcas/");
-            setMarcas(response.data);
-        } catch (error) {
-            console.error("Error al obtener marcas:", error);
-        }
+        const res = await api.get("marcas/");
+        setMarcas(res.data);
     };
 
     useEffect(() => {
@@ -82,13 +94,14 @@ const CatalogoProductos = () => {
         obtenerProductos();
     }, [busqueda, categoria, marca, orden]);
 
+    /* =========================
+       RENDER
+       ========================= */
     return (
         <div className="catalogo-layout">
-            {/* 🔹 Panel de filtros */}
             <aside className="filtros">
                 <h3>Filtrar productos</h3>
 
-                {/*Búsqueda */}
                 <label>Búsqueda</label>
                 <input
                     type="text"
@@ -97,7 +110,6 @@ const CatalogoProductos = () => {
                     onChange={(e) => setBusqueda(e.target.value)}
                 />
 
-                {/*Categoría */}
                 <label>Categoría</label>
                 <select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
                     <option value="">Todas</option>
@@ -108,7 +120,6 @@ const CatalogoProductos = () => {
                     ))}
                 </select>
 
-                {/*Marca */}
                 <label>Marca</label>
                 <select value={marca} onChange={(e) => setMarca(e.target.value)}>
                     <option value="">Todas</option>
@@ -119,7 +130,6 @@ const CatalogoProductos = () => {
                     ))}
                 </select>
 
-                {/*Orden */}
                 <label>Ordenar por</label>
                 <select value={orden} onChange={(e) => setOrden(e.target.value)}>
                     <option value="">Por defecto</option>
@@ -129,7 +139,6 @@ const CatalogoProductos = () => {
                 </select>
             </aside>
 
-            {/* Catálogo de productos */}
             <main className="grid-productos">
                 <h2>Catálogo de Productos</h2>
 
@@ -140,7 +149,7 @@ const CatalogoProductos = () => {
                         productos.map((prod) => (
                             <div key={prod.id} className="card-producto">
                                 <p className="marca">
-                                    {prod.marca ? prod.marca.nombre : "Sin marca"}
+                                    {prod.marca?.nombre || "Sin marca"}
                                 </p>
 
                                 {prod.imagen ? (
@@ -152,16 +161,62 @@ const CatalogoProductos = () => {
                                 <h4>{prod.nombre}</h4>
 
                                 <p className="categoria">
-                                    {prod.categoria ? prod.categoria.nombre : "Sin categoría"}
+                                    {prod.categoria?.nombre || "Sin categoría"}
                                 </p>
 
-                                <p className="precio">${prod.precio}</p>
-                                <p className="incluye-iva">Incluye IVA</p>
+                                {/* ===== PRECIO CON DESCUENTO ===== */}
+                                {prod.porcentaje_descuento > 0 ? (
+                                    <div className="precio">
+                                        <span
+                                            style={{
+                                                textDecoration: "line-through",
+                                                color: "#6b7280",
+                                                fontSize: "0.9rem",
+                                            }}
+                                        >
+                                            ${Number(prod.precio).toFixed(2)}
+                                        </span>
+                                        <br />
+                                        <span
+                                            style={{
+                                                color: "#dc2626",
+                                                fontWeight: "bold",
+                                                fontSize: "1.2rem",
+                                            }}
+                                        >
+                                            ${Number(prod.precio_final).toFixed(2)}
+                                        </span>
+                                        <br />
+                                        <span
+                                            style={{
+                                                color: "#16a34a",
+                                                fontSize: "0.85rem",
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            -{prod.porcentaje_descuento}%
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <p className="precio">
+                                        ${Number(prod.precio).toFixed(2)}
+                                    </p>
+                                )}
+
+                                <p className="incluye-iva">No incluye IVA</p>
+
+                                <p className={`stock ${prod.stock === 0 ? "agotado" : ""}`}>
+                                    {prod.stock > 0
+                                        ? `Stock disponible: ${prod.stock}`
+                                        : "Producto agotado"}
+                                </p>
+
                                 <button
                                     className="btn-carrito"
                                     onClick={() => agregarAlCarrito(prod)}
+                                    disabled={prod.stock === 0}
                                 >
-                                    Añadir al carrito
+                                    {prod.stock === 0 ? "Sin stock" : "Añadir al carrito"}
                                 </button>
                             </div>
                         ))

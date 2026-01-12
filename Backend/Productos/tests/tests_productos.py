@@ -93,8 +93,6 @@ class ProductoTests(APITestCase):
         response = self.client.delete(
             reverse("productos-detail", args=[self.producto.id])
         )
-
-        # Ajuste para pasar según tu ViewSet
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_vendedor_no_puede_eliminar_producto(self):
@@ -103,8 +101,6 @@ class ProductoTests(APITestCase):
         response = self.client.delete(
             reverse("productos-detail", args=[self.producto.id])
         )
-
-        # Ajuste para pasar según tu ViewSet
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_eliminar_producto_no_existe(self):

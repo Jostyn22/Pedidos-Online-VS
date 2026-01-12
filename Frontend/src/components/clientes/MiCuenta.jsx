@@ -70,6 +70,27 @@ const MiCuenta = () => {
         }
     };
 
+    const imprimirFactura = async (id) => {
+        try {
+            const response = await api.get(`pedidos/imprimir/${id}/`, {
+                responseType: "blob",
+            });
+
+            // Crear URL y abrir PDF
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", `Factura_Pedido_${id}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+        } catch (error) {
+            console.error("Error al imprimir pedido:", error);
+            alert("No se pudo generar la factura.");
+        }
+    };
+
     if (!usuario) {
         return <p className="cargando">Cargando información de tu cuenta...</p>;
     }
@@ -168,6 +189,7 @@ const MiCuenta = () => {
                                             <th>Fecha</th>
                                             <th>Total</th>
                                             <th>Estado</th>
+                                            <th>Factura</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -177,6 +199,14 @@ const MiCuenta = () => {
                                                 <td>{new Date(p.fecha).toLocaleDateString()}</td>
                                                 <td>${p.total}</td>
                                                 <td>{p.estado}</td>
+                                                <td>
+                                                    <button
+                                                        className="btn-factura"
+                                                        onClick={() => imprimirFactura(p.id)}
+                                                    >
+                                                        Descargar
+                                                    </button>
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>

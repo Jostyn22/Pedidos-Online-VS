@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAdminUser
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from django.http import HttpResponse
+from django.db import transaction
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 
@@ -16,72 +17,88 @@ from rest_framework.views import APIView
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def crear_pedido(request):
+    carrito = request.data.get("carrito", [])
+
+    if not carrito:
+        return Response({"mensaje": "El carrito está vacío"}, status=400)
+
     try:
-        carrito = request.data.get("carrito", [])
+        with transaction.atomic():
 
-        if not carrito:
-            return Response({"error": "Carrito vacío"}, status=400)
+            cliente = request.user
 
-        cliente = request.user
-
-        primer_producto = Producto.objects.filter(
-            id=carrito[0].get("producto_id")
-        ).first()
-
-        if not primer_producto:
-            return Response({"error": "Producto no válido"}, status=400)
-
-        pedido = Pedido.objects.create(
-            cliente=cliente,
-            vendedor=primer_producto.vendedor,
-            total=0
-        )
-
-        total = 0
-
-        for item in carrito:
-            producto = Producto.objects.filter(
-                id=item.get("producto_id")
+            primer_producto = Producto.objects.select_for_update().filter(
+                id=carrito[0].get("producto_id")
             ).first()
 
-            if not producto:
-                return Response({"error": "Producto no encontrado"}, status=400)
+            if not primer_producto:
+                raise ValueError("Producto no válido")
 
-            cantidad = int(item.get("cantidad", 0))
-
-            if cantidad <= 0:
-                return Response({"error": "Cantidad inválida"}, status=400)
-
-            # 🔴 VALIDACIÓN CRÍTICA DE STOCK
-            if producto.stock < cantidad:
-                return Response(
-                    {"error": f"Stock insuficiente para {producto.nombre}"},
-                    status=400
-                )
-
-            PedidoDetalle.objects.create(
-                pedido=pedido,
-                producto=producto,
-                cantidad=cantidad,
-                precio=producto.precio
+            pedido = Pedido.objects.create(
+                cliente=cliente,
+                vendedor=primer_producto.vendedor,
+                total=0
             )
 
-            total += producto.precio * cantidad
-            producto.stock -= cantidad
-            producto.save()
+            total = 0
 
-        pedido.total = total
-        pedido.save()
+            for item in carrito:
+                producto = Producto.objects.select_for_update().filter(
+                    id=item.get("producto_id")
+                ).first()
 
-        return Response({
-            "mensaje": "Pedido creado correctamente",
-            "pedido_id": pedido.id
-        })
+                if not producto:
+                    raise ValueError("Producto no encontrado")
+
+                cantidad = int(item.get("cantidad", 0))
+
+                if cantidad <= 0:
+                    raise ValueError("Cantidad inválida")
+
+                if not producto.activo:
+                    raise ValueError(f"El producto {producto.nombre} no está disponible")
+
+                if producto.stock < cantidad:
+                    raise ValueError(
+                        f"Stock insuficiente para {producto.nombre}. Disponible: {producto.stock}"
+                    )
+
+                # Descontar stock
+                producto.stock -= cantidad
+                producto.save()
+                
+                precio_unitario = producto.precio
+                if item.get("precio_final") is not None and item["precio_final"] < producto.precio:
+                    precio_unitario = item["precio_final"]
+
+                PedidoDetalle.objects.create(
+                    pedido=pedido,
+                    producto=producto,
+                    cantidad=cantidad,
+                    precio=precio_unitario
+                )
+
+                total += precio_unitario * cantidad
+
+            pedido.total = total
+            pedido.save()
+
+            return Response(
+                {
+                    "mensaje": "Pedido creado correctamente",
+                    "pedido_id": pedido.id,
+                    "total": float(pedido.total) 
+                },
+                status=status.HTTP_201_CREATED
+            )
+
+    except ValueError as e:
+        # rollback automático
+        return Response({"mensaje": str(e)}, status=400)
 
     except Exception as e:
         print("ERROR CREANDO PEDIDO:", e)
-        return Response({"error": str(e)}, status=500)
-
+        return Response({"mensaje": "Error interno al crear el pedido"}, status=500)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def pedidos_cliente(request):
@@ -124,7 +141,7 @@ class PedidoAdminViewSet(ModelViewSet):
     serializer_class = PedidoSerializer
     permission_classes = [IsAdminUser]
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAuthenticated])
 def imprimir_pedido(request, pedido_id):
     from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
     from reportlab.lib.pagesizes import letter
@@ -209,7 +226,7 @@ def imprimir_pedido(request, pedido_id):
 
         #FORMA DE PAGO
         contenido.append(Spacer(1, 12))
-        contenido.append(Paragraph("<b>Forma de Pago:</b> 01 - Tarjeta", estilos["Normal"]))
+        contenido.append(Paragraph("<b>Forma de Pago:</b> 01 - Efectivo", estilos["Normal"]))
 
         pdf.build(contenido)
         return response
